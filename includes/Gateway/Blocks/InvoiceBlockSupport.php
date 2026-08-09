@@ -94,7 +94,6 @@ final class InvoiceBlockSupport extends AbstractPaymentMethodType {
 		return array(
 			'title'        => (string) $this->get_setting( 'title' ),
 			'description'  => (string) $this->get_setting( 'description' ),
-			'terms'        => 0 === $organization_id ? '' : Eligibility::terms_summary( $organization_id ),
 			'creditNotice' => null === $available ? '' : sprintf(
 				/* translators: %s: formatted amount of credit still available. */
 				__( 'Credit still available: %s.', 'woo-invoice-payment-method' ),

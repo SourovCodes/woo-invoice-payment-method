@@ -3,8 +3,11 @@
 A WooCommerce extension that adds one payment method: **Pay by invoice**. The customer completes
 the checkout without paying, the goods go out, the invoice follows, and somebody settles it later.
 What makes it a product rather than a copy of the bank transfer gateway is *who it is offered to* —
-an organization the shop has agreed terms with, up to a credit limit it set — which is why this
+an organization the shop has approved for it, up to a credit limit it set — which is why this
 plugin is built on top of **WooCommerce Organization Accounts Pro** rather than beside it.
+
+The invoice itself is raised elsewhere: the shop generates it in its own accounting system and
+imports it. This plugin decides who may check out without paying and how much they may owe.
 
 - Text domain / slug: `woo-invoice-payment-method`
 - PHP namespace: `WooInvoicePayment\` (PSR-4 → `includes/`)
@@ -130,8 +133,8 @@ rather than receiving one — `AdminTest` is where the handler is asserted to ch
 
 - **Sanitise on input**: `sanitize_text_field()`, `absint()`, `wc_format_decimal()`, `wp_unslash()`
   on every `$_POST` / `$_GET` value. Never read `$_REQUEST` outside a nonce check. The checkout
-  collects nothing from the customer — the method states terms and takes the order — so every input
-  the plugin has is on the admin screen.
+  collects nothing from the customer — the method states its terms and takes the order — so every
+  input the plugin has is on the admin screen.
 - **Escape on output**: `esc_html()`, `esc_attr()`, `esc_url()`, `wp_kses_post()` — at the point of
   output, not at assignment. That includes exception messages, which WooCommerce prints.
 - **Authorise every state change**: `check_admin_referer()` *and* `current_user_can()`. A nonce
@@ -139,8 +142,8 @@ rather than receiving one — `AdminTest` is where the handler is asserted to ch
 - **`process_payment()` is the enforcement point, and it is the only one.** `validate_fields()`
   exists so the customer hears about a problem beside the field they can fix — the block checkout
   never calls it. Anything enforced only there is not enforced at all for most shops.
-- **Nothing the browser sends is trusted.** The block integration hands the browser the terms and
-  the credit remaining; both are re-derived on the server when the order is placed.
+- **Nothing the browser sends is trusted.** The block integration hands the browser the credit
+  remaining; it is re-derived on the server when the order is placed.
 - **Prepare every query**: `$wpdb->prepare()` for anything with a variable in it. All SQL lives in
   `includes/Data/TermsRepository.php` and `includes/Install.php`; nothing else in the plugin
   contains a query.
@@ -151,14 +154,24 @@ rather than receiving one — `AdminTest` is where the handler is asserted to ch
 ```
 Organization (owned by the dependency)
      └── Invoice terms (this plugin's one table)
-            ├── status              may it pay by invoice at all
-            ├── payment_terms_days  how long it has
-            └── credit_limit        how much it may owe at once
+            ├── status        may it pay by invoice at all
+            └── credit_limit  how much it may owe at once
                      ↓
               Pay by invoice gateway ── classic checkout
-                     │              └── block checkout (Store API)
-                     └── Order: terms and due date, snapshotted
+                                     └── block checkout (Store API)
 ```
+
+### The plugin does not raise the invoice, and does not track the payment
+
+Invoices are generated in the shop's own accounting system and imported here, so **there are no
+payment terms and no due date anywhere in this plugin** — not as a gateway setting, not per
+organization, and not stamped on an order. Adding one back would put a second, always-stale answer
+beside the system that actually issues the document.
+
+What this plugin decides is narrower and is the part WooCommerce cannot answer on its own: **who is
+offered the method** (`Eligibility`) and **how much they may owe while using it** (`Credit`). Whether
+an order has been paid is still WooCommerce's own `date_paid`, which is what the credit limit counts
+against.
 
 ### Two questions, asked in this order
 
@@ -179,12 +192,11 @@ their cart would read as a bug in the shop.
 
 ### Every answer has a "nothing decided" state that is not its zero
 
-All three columns are nullable, and none of the nulls could be folded into a zero:
+Neither answer's "nothing decided" could be folded into its zero:
 
 | Column | `null` means | `0` means |
 |---|---|---|
 | `status` (`default`) | follow the gateway's availability setting | — |
-| `payment_terms_days` | use the gateway's default | payable on receipt |
 | `credit_limit` | no limit | no credit at all |
 
 Storing "no limit" as zero would mean the shop could not express it, and a customer whose limit was
@@ -198,7 +210,7 @@ caller has an object to ask; and saving a set of terms that says nothing **delet
 a row of defaults and no row mean the same thing and keeping both would leave the screen reporting a
 decision nobody made.
 
-**The table is a side table, not three columns added to `woap_organizations`.** The dependency owns
+**The table is a side table, not a few more columns on `woap_organizations`.** The dependency owns
 that schema, and a plugin that can be deactivated must not leave columns behind in somebody else's
 table. `organization_id` is the primary key, so "one organization has one set of terms" is a rule
 the database keeps rather than one every write has to remember — the same reason
@@ -220,22 +232,12 @@ so a shop with a custom status gets the sensible answer.
 moving an order to Processing or Completed frees the credit it was using. A shop that ships before it
 is paid and wants the limit to keep meaning something should leave new invoice orders **on hold**.
 
-### The terms on an order are a snapshot
+### The plugin writes no order meta of its own
 
-`Checkout\OrderMeta` writes `_woip_payment_terms_days` and `_woip_due_date` when the order is
-placed, and nothing recomputes them afterwards. Shortening a customer's terms next
-month must not retrospectively make last month's invoice overdue — an order is a financial record of
-an agreement that was in force when it was made.
-
-The number of days is stored *beside* the date it produced even though one can be derived from the
-other, because neither derivation is safe: reading the days off the current terms is the
-retrospective edit above, and recomputing the date from the order date and the current terms is the
-same edit wearing arithmetic.
-
-`Checkout\OrderDetails::rows()` is the one list every screen showing an invoice is built from — the
-customer's order details, both formats of the order emails, and the admin order screen. Three
-near-identical lists drifting apart is how a shop ends up with a due date on the email that the
-customer's account page disagrees with.
+An invoice order is one whose `payment_method` is `woip_invoice`, and that is the whole of it.
+WooCommerce already stores the payment method, the total, the refunds and `date_paid`, which between
+them answer every question `Credit` asks — so there is nothing left for a `_woip_*` meta key to hold
+that would not be a copy of an answer WooCommerce already gives.
 
 ### Both checkouts, one gateway
 

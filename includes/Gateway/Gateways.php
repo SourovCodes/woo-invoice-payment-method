@@ -31,6 +31,7 @@ class Gateways {
 	public function register() {
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateway' ) );
 		add_action( 'woocommerce_blocks_payment_method_type_registration', array( $this, 'register_block_support' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 	}
 
 	/**
@@ -61,5 +62,28 @@ class Gateways {
 		}
 
 		$registry->register( new InvoiceBlockSupport() );
+	}
+
+	/**
+	 * Load the frontend stylesheet, and only where the method renders anything.
+	 *
+	 * The checkout is the only screen it does: the credit still available is the one
+	 * thing this plugin prints outside wp-admin, and both checkouts print it. It is
+	 * asked for with is_checkout() rather than by template, because the block checkout's
+	 * markup is on the page whether or not the classic templates ran.
+	 *
+	 * @return void
+	 */
+	public function enqueue_styles() {
+		if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'woip-checkout',
+			WOIP_PLUGIN_URL . 'assets/css/checkout.css',
+			array(),
+			WOIP_VERSION
+		);
 	}
 }

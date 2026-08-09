@@ -40,12 +40,6 @@
 			);
 		}
 
-		if ( settings.terms ) {
-			children.push(
-				el( 'p', { key: 'terms', className: 'woip-terms' }, decodeEntities( settings.terms ) )
-			);
-		}
-
 		if ( settings.creditNotice ) {
 			children.push(
 				el( 'p', { key: 'credit', className: 'woip-credit' }, decodeEntities( settings.creditNotice ) )

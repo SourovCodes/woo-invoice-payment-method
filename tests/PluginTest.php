@@ -9,6 +9,7 @@ namespace WooInvoicePayment\Tests;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use Automattic\WooCommerce\Utilities\OrderUtil;
+use WooInvoicePayment\Gateway\Options;
 use WooInvoicePayment\Install;
 use WooInvoicePayment\Plugin;
 use WP_UnitTestCase;
@@ -124,6 +125,42 @@ class PluginTest extends WP_UnitTestCase {
 	public function testTheTableIsInstalled() {
 		$this->assertTrue( Install::tables_exist() );
 		$this->assertSame( WOIP_DB_VERSION, get_option( Install::VERSION_OPTION ) );
+	}
+
+	/**
+	 * The upgrade clears away what a removed feature left behind.
+	 *
+	 * Neither half happens on its own: dbDelta() never drops a column, and
+	 * WC_Settings_API writes back every key it finds in the settings array whether or
+	 * not it still has a field for it. Without this both would outlive the payment terms
+	 * they belonged to, as a decision the shop can no longer see.
+	 */
+	public function testTheUpgradeRemovesWhatARetiredFeatureLeftBehind() {
+		global $wpdb;
+
+		$table    = Install::table( Install::TERMS );
+		$settings = get_option( Options::OPTION_KEY, array() );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from a class constant; the statement takes no values.
+		$wpdb->query( "ALTER TABLE {$table} ADD COLUMN payment_terms_days smallint(5) unsigned NULL default null" );
+		update_option( Options::OPTION_KEY, array_merge( (array) $settings, array( 'payment_terms_days' => 30 ) ) );
+
+		Install::install();
+
+		$this->assertNull(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- As above; the column is a placeholder.
+			$wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM {$table} LIKE %s", 'payment_terms_days' ) ),
+			'The retired column survived the upgrade.'
+		);
+		$this->assertArrayNotHasKey(
+			'payment_terms_days',
+			(array) get_option( Options::OPTION_KEY ),
+			'The retired setting survived the upgrade.'
+		);
+
+		// The ALTER above implicitly commits, so the settings are put back by hand
+		// rather than left to the transaction this test would otherwise roll back.
+		update_option( Options::OPTION_KEY, $settings );
 	}
 
 	/**

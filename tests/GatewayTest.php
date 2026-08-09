@@ -7,7 +7,6 @@
 
 namespace WooInvoicePayment\Tests;
 
-use WooInvoicePayment\Checkout\OrderMeta;
 use WooInvoicePayment\Data\Terms;
 use WooInvoicePayment\Gateway\InvoiceGateway;
 use WooInvoicePayment\Gateway\Options;
@@ -118,10 +117,10 @@ class GatewayTest extends TestCase {
 	}
 
 	/**
-	 * A successful payment parks the order and records what it was sold on.
+	 * A successful payment parks the order on the gateway without paying for it.
 	 */
-	public function testPlacingAnOrderRecordsTheTerms() {
-		$organization = $this->signed_in_buyer( array( 'payment_terms_days' => 14 ) );
+	public function testPlacingAnOrderParksItUnpaid() {
+		$organization = $this->signed_in_buyer();
 		$order        = $this->pending_order( $organization, 120.00 );
 
 		$result = ( new InvoiceGateway() )->process_payment( $order->get_id() );
@@ -131,35 +130,9 @@ class GatewayTest extends TestCase {
 
 		$stored = wc_get_order( $order->get_id() );
 
+		$this->assertSame( InvoiceGateway::ID, $stored->get_payment_method() );
 		$this->assertTrue( $stored->has_status( 'on-hold' ) );
 		$this->assertNull( $stored->get_date_paid(), 'Nothing has been paid yet.' );
-		$this->assertSame( 14, OrderMeta::payment_terms_days( $stored ) );
-		$this->assertSame( gmdate( 'Y-m-d', time() + ( 14 * DAY_IN_SECONDS ) ), OrderMeta::due_date( $stored ) );
-	}
-
-	/**
-	 * The terms on the order are a snapshot, not a live reading.
-	 *
-	 * Shortening a customer's terms next month must not retrospectively make an
-	 * invoice raised last month overdue.
-	 */
-	public function testTheRecordedTermsDoNotFollowLaterChanges() {
-		$organization = $this->signed_in_buyer( array( 'payment_terms_days' => 30 ) );
-		$order        = $this->pending_order( $organization, 50.00 );
-
-		( new InvoiceGateway() )->process_payment( $order->get_id() );
-
-		$this->set_terms(
-			$organization,
-			array(
-				'status'             => Terms::STATUS_ALLOWED,
-				'payment_terms_days' => 0,
-			)
-		);
-
-		$stored = wc_get_order( $order->get_id() );
-
-		$this->assertSame( 30, OrderMeta::payment_terms_days( $stored ) );
 	}
 
 	/**
@@ -242,22 +215,15 @@ class GatewayTest extends TestCase {
 	}
 
 	/**
-	 * The checkout tells the customer the terms and what credit is left.
+	 * The checkout tells the customer what credit is left.
 	 */
-	public function testTheCheckoutStatesTheTermsAndTheCreditLeft() {
-		$this->signed_in_buyer(
-			array(
-				'payment_terms_days' => 14,
-				'credit_limit'       => 1000,
-			)
-		);
+	public function testTheCheckoutStatesTheCreditLeft() {
+		$this->signed_in_buyer( array( 'credit_limit' => 1000 ) );
 
 		ob_start();
 		( new InvoiceGateway() )->payment_fields();
-		$rendered = (string) ob_get_clean();
 
-		$this->assertStringContainsString( '14 days', $rendered );
-		$this->assertStringContainsString( 'Credit still available', $rendered );
+		$this->assertStringContainsString( 'Credit still available', (string) ob_get_clean() );
 	}
 
 	/**

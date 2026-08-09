@@ -262,7 +262,7 @@ class I18nTest extends WP_UnitTestCase {
 			Plugin::GERMAN_INFORMAL,
 			function () {
 				$this->assertSame( 'Kauf auf Rechnung', __( 'Pay by invoice', 'woo-invoice-payment-method' ) );
-				$this->assertSame( 'Rechnung fällig', __( 'Invoice due', 'woo-invoice-payment-method' ) );
+				$this->assertSame( 'Kreditlimit', __( 'Credit limit', 'woo-invoice-payment-method' ) );
 			}
 		);
 
@@ -285,43 +285,11 @@ class I18nTest extends WP_UnitTestCase {
 				$locale,
 				function () use ( $locale ) {
 					$this->assertSame( 'Kauf auf Rechnung', __( 'Pay by invoice', 'woo-invoice-payment-method' ), $locale );
-					$this->assertSame( 'Zahlungsziel', __( 'Payment terms', 'woo-invoice-payment-method' ), $locale );
 					$this->assertSame( 'Kreditlimit', __( 'Credit limit', 'woo-invoice-payment-method' ), $locale );
-					$this->assertSame( 'Rechnung fällig', __( 'Invoice due', 'woo-invoice-payment-method' ), $locale );
-					$this->assertSame(
-						'Zahlbar sofort nach Erhalt.',
-						__( 'Payable on receipt.', 'woo-invoice-payment-method' ),
-						$locale
-					);
+					$this->assertSame( 'Kein Limit', __( 'No limit', 'woo-invoice-payment-method' ), $locale );
 				}
 			);
 		}
-	}
-
-	/**
-	 * Both plural forms of the payment terms are translated.
-	 *
-	 * German needs two, and a catalogue carrying only the singular reads correctly
-	 * everywhere except the case that is almost always the one on screen.
-	 *
-	 * @return void
-	 */
-	public function test_the_payment_terms_have_both_plural_forms() {
-		$this->with_locale(
-			Plugin::GERMAN_INFORMAL,
-			function () {
-				$this->assertSame(
-					'Zahlbar innerhalb von 1 Tag ab Rechnungsdatum.',
-					/* translators: %d: number of days the invoice is payable within. */
-					sprintf( _n( 'Payable within %d day of the invoice date.', 'Payable within %d days of the invoice date.', 1, 'woo-invoice-payment-method' ), 1 )
-				);
-				$this->assertSame(
-					'Zahlbar innerhalb von 30 Tagen ab Rechnungsdatum.',
-					/* translators: %d: number of days the invoice is payable within. */
-					sprintf( _n( 'Payable within %d day of the invoice date.', 'Payable within %d days of the invoice date.', 30, 'woo-invoice-payment-method' ), 30 )
-				);
-			}
-		);
 	}
 
 	/**

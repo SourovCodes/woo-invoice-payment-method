@@ -7,7 +7,6 @@
 
 namespace WooInvoicePayment\Gateway;
 
-use WooInvoicePayment\Checkout\OrderMeta;
 use WooInvoicePayment\Credit;
 use WooInvoicePayment\Eligibility;
 
@@ -60,7 +59,7 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 		$this->has_fields         = true;
 		$this->method_title       = __( 'Pay by invoice', 'woo-invoice-payment-method' );
 		$this->method_description = __(
-			'Lets an organization complete the checkout without paying, and be invoiced on the terms you agreed with it. Offered only to the organizations you allow it to, and only up to the credit limit you set them.',
+			'Lets an organization complete the checkout without paying, and be invoiced separately. Offered only to the organizations you allow it to, and only up to the credit limit you set them.',
 			'woo-invoice-payment-method'
 		);
 		$this->supports           = array( 'products' );
@@ -108,7 +107,7 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 			'description'              => array(
 				'title'       => __( 'Description', 'woo-invoice-payment-method' ),
 				'type'        => 'textarea',
-				'description' => __( 'Shown under the payment method when the customer selects it. The agreed terms are added to it automatically.', 'woo-invoice-payment-method' ),
+				'description' => __( 'Shown under the payment method when the customer selects it. The credit still available is added to it automatically.', 'woo-invoice-payment-method' ),
 				'default'     => $defaults['description'],
 				'desc_tip'    => true,
 			),
@@ -129,18 +128,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 				'options'     => array(
 					Options::AVAILABILITY_SELECTED => __( 'Only the organizations I allow one by one', 'woo-invoice-payment-method' ),
 					Options::AVAILABILITY_ALL      => __( 'Every organization that can place orders', 'woo-invoice-payment-method' ),
-				),
-			),
-			'payment_terms_days'       => array(
-				'title'             => __( 'Default payment terms', 'woo-invoice-payment-method' ),
-				'type'              => 'number',
-				'description'       => __( 'Days an invoice is payable within, for an organization you have not agreed different terms with. Zero means payable on receipt.', 'woo-invoice-payment-method' ),
-				'default'           => (string) $defaults['payment_terms_days'],
-				'desc_tip'          => true,
-				'custom_attributes' => array(
-					'min'  => '0',
-					'max'  => '365',
-					'step' => '1',
 				),
 			),
 			'order_status'             => array(
@@ -203,8 +190,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 		if ( 0 === $organization_id ) {
 			return;
 		}
-
-		printf( '<p class="woip-terms">%s</p>', esc_html( Eligibility::terms_summary( $organization_id ) ) );
 
 		$available = Credit::available( $organization_id );
 
@@ -294,10 +279,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 			throw new \Exception( esc_html( $reason ) );
 		}
 
-		$terms_days = Eligibility::payment_terms_days( $organization_id );
-		$due_date   = Eligibility::due_date( $organization_id );
-
-		OrderMeta::stamp( $order, $terms_days, $due_date );
 		$order->set_payment_method( $this );
 		$order->save();
 
@@ -314,11 +295,7 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 
 			$order->update_status(
 				'on-hold',
-				sprintf(
-					/* translators: %s: the date the invoice falls due. */
-					__( 'Awaiting payment of the invoice, due %s.', 'woo-invoice-payment-method' ),
-					$due_date
-				)
+				__( 'Awaiting payment of the invoice.', 'woo-invoice-payment-method' )
 			);
 		}
 
@@ -337,19 +314,14 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 	/**
 	 * Print the instructions on the order received page.
 	 *
-	 * @param int $order_id The order.
 	 * @return void
 	 */
-	public function thankyou_page( $order_id = 0 ) {
-		$order = wc_get_order( $order_id );
-
-		if ( '' !== $this->instructions ) {
-			echo wp_kses_post( wpautop( wptexturize( $this->instructions ) ) );
+	public function thankyou_page() {
+		if ( '' === $this->instructions ) {
+			return;
 		}
 
-		if ( $order instanceof \WC_Order ) {
-			$this->render_terms_paragraph( $order );
-		}
+		echo wp_kses_post( wpautop( wptexturize( $this->instructions ) ) );
 	}
 
 	/**
@@ -365,7 +337,7 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
-		if ( $sent_to_admin || ! $order instanceof \WC_Order || ! OrderMeta::is_invoice_order( $order ) ) {
+		if ( $sent_to_admin || ! $order instanceof \WC_Order || self::ID !== $order->get_payment_method() ) {
 			return;
 		}
 
@@ -380,31 +352,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 		}
 
 		echo wp_kses_post( wpautop( wptexturize( $this->instructions ) ) );
-	}
-
-	/**
-	 * Print the terms an order was placed on.
-	 *
-	 * @param \WC_Order $order The order.
-	 * @return void
-	 */
-	private function render_terms_paragraph( \WC_Order $order ) {
-		$due = OrderMeta::formatted_due_date( $order );
-
-		if ( '' === $due ) {
-			return;
-		}
-
-		printf(
-			'<p class="woip-terms">%s</p>',
-			esc_html(
-				sprintf(
-					/* translators: %s: the date the invoice falls due. */
-					__( 'This invoice is due on %s.', 'woo-invoice-payment-method' ),
-					$due
-				)
-			)
-		);
 	}
 
 	/**

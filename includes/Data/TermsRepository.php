@@ -187,12 +187,11 @@ final class TermsRepository {
 		 * as a list: they have to arrive in the same order as the columns that survived.
 		 */
 		$types   = array(
-			'organization_id'    => '%d',
-			'status'             => '%s',
-			'payment_terms_days' => '%d',
-			'credit_limit'       => '%f',
-			'note'               => '%s',
-			'date_modified'      => '%s',
+			'organization_id' => '%d',
+			'status'          => '%s',
+			'credit_limit'    => '%f',
+			'note'            => '%s',
+			'date_modified'   => '%s',
 		);
 		$formats = array();
 

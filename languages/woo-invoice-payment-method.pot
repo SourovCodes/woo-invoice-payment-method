@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-09T06:19:21+00:00\n"
+"POT-Creation-Date: 2026-08-09T09:07:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woo-invoice-payment-method\n"
@@ -26,7 +26,7 @@ msgstr ""
 
 #. Description of the plugin
 #: woo-invoice-payment-method.php
-msgid "Adds a Pay by invoice payment method to the WooCommerce checkout, offered only to the organizations a shop has approved for it, on the payment terms and credit limit it set them."
+msgid "Adds a Pay by invoice payment method to the WooCommerce checkout, offered only to the organizations a shop has approved for it, up to the credit limit it set them."
 msgstr ""
 
 #. Author of the plugin
@@ -34,181 +34,142 @@ msgstr ""
 msgid "Sourov Biswas"
 msgstr ""
 
-#: includes/Admin/OrderColumn.php:47
-#: includes/Admin/OrderColumn.php:52
-#: includes/Checkout/OrderDetails.php:65
-msgid "Invoice due"
-msgstr ""
-
-#. translators: %s: the date the invoice fell due.
-#: includes/Admin/OrderColumn.php:93
-#: includes/Checkout/OrderDetails.php:68
-#, php-format
-msgid "%s — overdue"
-msgstr ""
-
-#: includes/Admin/OrderColumn.php:103
-msgid "Paid"
-msgstr ""
-
-#: includes/Admin/OrganizationTerms.php:81
-#: includes/Admin/OrganizationTerms.php:82
-#: includes/Admin/OrganizationTerms.php:197
-#: includes/Admin/OrganizationTerms.php:466
+#: includes/Admin/OrganizationTerms.php:101
+#: includes/Admin/OrganizationTerms.php:102
+#: includes/Admin/OrganizationTerms.php:217
+#: includes/Admin/OrganizationTerms.php:467
 msgid "Invoice Payments"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:151
+#: includes/Admin/OrganizationTerms.php:171
 msgid "The invoice terms were saved."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:152
+#: includes/Admin/OrganizationTerms.php:172
 msgid "The invoice terms were cleared. This account now follows the payment method setting."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:153
-#: includes/Admin/OrganizationTerms.php:467
+#: includes/Admin/OrganizationTerms.php:173
+#: includes/Admin/OrganizationTerms.php:468
 msgid "That account no longer exists."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:154
-msgid "The credit limit and the payment terms have to be numbers, and neither can be negative."
+#: includes/Admin/OrganizationTerms.php:174
+msgid "The credit limit has to be a number, and it cannot be negative."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:205
+#: includes/Admin/OrganizationTerms.php:225
 msgid "Search accounts"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:213
+#: includes/Admin/OrganizationTerms.php:233
 msgid "Account status"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:214
+#: includes/Admin/OrganizationTerms.php:234
 #: includes/Admin/OrganizationTerms.php:534
 msgid "Invoicing"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:215
-#: includes/Admin/OrganizationTerms.php:561
-#: includes/Checkout/OrderDetails.php:53
-#: includes/Checkout/OrderDetails.php:55
-msgid "Payment terms"
-msgstr ""
-
-#: includes/Admin/OrganizationTerms.php:216
-#: includes/Admin/OrganizationTerms.php:598
+#: includes/Admin/OrganizationTerms.php:235
+#: includes/Admin/OrganizationTerms.php:560
 msgid "Credit limit"
 msgstr ""
 
 #. translators: %s: the plural organization noun for the site's mode.
-#: includes/Admin/OrganizationTerms.php:225
+#: includes/Admin/OrganizationTerms.php:244
 #, php-format
 msgid "No %s to show."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:258
+#: includes/Admin/OrganizationTerms.php:277
 msgid "Updates"
 msgstr ""
 
 #. translators: 1: available version, 2: installed version.
-#: includes/Admin/OrganizationTerms.php:263
+#: includes/Admin/OrganizationTerms.php:282
 #, php-format
 msgid "Version %1$s is available. You are running %2$s."
 msgstr ""
 
 #. translators: %s: installed version.
-#: includes/Admin/OrganizationTerms.php:270
+#: includes/Admin/OrganizationTerms.php:289
 #, php-format
 msgid "You are running the latest version, %s."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:274
+#: includes/Admin/OrganizationTerms.php:293
 msgid "The last update check did not complete. GitHub may have been unreachable."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:282
+#: includes/Admin/OrganizationTerms.php:301
 msgid "Check for updates"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:296
-#: includes/Admin/OrganizationTerms.php:650
+#: includes/Admin/OrganizationTerms.php:315
+#: includes/Admin/OrganizationTerms.php:612
 msgid "You do not have permission to do that."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:297
-#: includes/Admin/OrganizationTerms.php:651
+#: includes/Admin/OrganizationTerms.php:316
+#: includes/Admin/OrganizationTerms.php:613
 msgid "Permission denied"
 msgstr ""
 
 #. translators: %s: the plural organization noun for the site's mode.
-#: includes/Admin/OrganizationTerms.php:317
+#: includes/Admin/OrganizationTerms.php:336
 #, php-format
 msgid "Invoicing is currently offered to every %s that can place orders, except the ones refused it below."
 msgstr ""
 
 #. translators: %s: the plural organization noun for the site's mode.
-#: includes/Admin/OrganizationTerms.php:322
+#: includes/Admin/OrganizationTerms.php:341
 #, php-format
 msgid "Invoicing is currently offered only to the %s allowed it below."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:330
+#: includes/Admin/OrganizationTerms.php:349
 msgid "Payment method settings"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:336
+#: includes/Admin/OrganizationTerms.php:355
 msgid "The Pay by invoice payment method is switched off, so nothing here is offered at the checkout yet."
 msgstr ""
 
-#. translators: %d: the default number of days set on the payment method.
-#: includes/Admin/OrganizationTerms.php:374
-#, php-format
-msgid "Default (%d days)"
-msgstr ""
-
-#. translators: %d: number of days the invoice is payable within.
-#: includes/Admin/OrganizationTerms.php:379
-#: includes/Checkout/OrderDetails.php:57
-#, php-format
-msgid "%d day"
-msgid_plural "%d days"
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/Admin/OrganizationTerms.php:387
-#: includes/Admin/OrganizationTerms.php:603
+#: includes/Admin/OrganizationTerms.php:388
+#: includes/Admin/OrganizationTerms.php:565
 msgid "No limit"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:404
+#: includes/Admin/OrganizationTerms.php:405
 msgid "Allowed"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:408
+#: includes/Admin/OrganizationTerms.php:409
 msgid "Refused"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:412
+#: includes/Admin/OrganizationTerms.php:413
 msgid "Allowed by default"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:413
+#: includes/Admin/OrganizationTerms.php:414
 msgid "Not offered by default"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:471
+#: includes/Admin/OrganizationTerms.php:472
 #: includes/Admin/OrganizationTerms.php:521
 msgid "Back to the list"
 msgstr ""
 
 #. translators: %s: the organization's name.
-#: includes/Admin/OrganizationTerms.php:485
+#: includes/Admin/OrganizationTerms.php:486
 #, php-format
 msgid "Invoice terms for %s"
 msgstr ""
 
 #. translators: %s: formatted amount currently outstanding on unpaid invoices.
-#: includes/Admin/OrganizationTerms.php:496
+#: includes/Admin/OrganizationTerms.php:497
 #, php-format
 msgid "Currently outstanding on unpaid invoices: %s."
 msgstr ""
@@ -221,49 +182,20 @@ msgstr ""
 msgid "The first answer follows whatever the payment method is set to offer. The other two are decisions about this account and outlive a change to that setting."
 msgstr ""
 
-#. translators: %d: the default number of days set on the payment method.
-#: includes/Admin/OrganizationTerms.php:569
-#, php-format
-msgid "Use the default of %d days"
-msgstr ""
-
-#: includes/Admin/OrganizationTerms.php:578
-msgid "Agree different terms:"
-msgstr ""
-
-#: includes/Admin/OrganizationTerms.php:580
-msgid "days"
-msgstr ""
-
-#: includes/Admin/OrganizationTerms.php:585
-msgid "Zero days means payable on receipt. The terms are copied onto each order as it is placed, so changing them here never moves the due date of an invoice already raised."
-msgstr ""
-
-#: includes/Admin/OrganizationTerms.php:609
+#: includes/Admin/OrganizationTerms.php:571
 msgid "Owe no more than:"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:616
+#: includes/Admin/OrganizationTerms.php:578
 msgid "Checked against every unpaid invoice order this account has open, when it tries to place another. A limit of zero refuses new invoices while anything is outstanding, which is not the same as no limit."
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:627
+#: includes/Admin/OrganizationTerms.php:589
 msgid "Note"
 msgstr ""
 
-#: includes/Admin/OrganizationTerms.php:636
+#: includes/Admin/OrganizationTerms.php:598
 msgid "For the shop only. The customer never sees it."
-msgstr ""
-
-#: includes/Checkout/OrderDetails.php:53
-msgid "Payable on receipt"
-msgstr ""
-
-#: includes/Checkout/OrderDetails.php:95
-#: includes/Checkout/OrderDetails.php:134
-#: includes/Checkout/OrderDetails.php:145
-#: includes/Checkout/OrderDetails.php:173
-msgid "Invoice"
 msgstr ""
 
 #. translators: %s: formatted amount already outstanding.
@@ -278,155 +210,127 @@ msgstr ""
 msgid "This order cannot go on invoice: it comes to %1$s and only %2$s of the agreed credit is left. Please settle an open invoice, or choose another payment method."
 msgstr ""
 
-#: includes/Data/Terms.php:84
+#: includes/Data/Terms.php:81
 msgid "Follow the payment method setting"
 msgstr ""
 
-#: includes/Data/Terms.php:85
+#: includes/Data/Terms.php:82
 msgid "Always allowed"
 msgstr ""
 
-#: includes/Data/Terms.php:86
+#: includes/Data/Terms.php:83
 msgid "Never allowed"
 msgstr ""
 
-#: includes/Eligibility.php:137
-msgid "Payable on receipt."
-msgstr ""
-
-#. translators: %d: number of days the invoice is payable within.
-#: includes/Eligibility.php:142
-#, php-format
-msgid "Payable within %d day of the invoice date."
-msgid_plural "Payable within %d days of the invoice date."
-msgstr[0] ""
-msgstr[1] ""
-
 #. translators: %s: formatted amount of credit still available.
-#: includes/Gateway/Blocks/InvoiceBlockSupport.php:100
-#: includes/Gateway/InvoiceGateway.php:217
+#: includes/Gateway/Blocks/InvoiceBlockSupport.php:99
+#: includes/Gateway/InvoiceGateway.php:202
 #, php-format
 msgid "Credit still available: %s."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:61
+#: includes/Gateway/InvoiceGateway.php:60
 #: includes/Gateway/Options.php:55
 msgid "Pay by invoice"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:62
-msgid "Lets an organization complete the checkout without paying, and be invoiced on the terms you agreed with it. Offered only to the organizations you allow it to, and only up to the credit limit you set them."
+#: includes/Gateway/InvoiceGateway.php:61
+msgid "Lets an organization complete the checkout without paying, and be invoiced separately. Offered only to the organizations you allow it to, and only up to the credit limit you set them."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:96
+#: includes/Gateway/InvoiceGateway.php:95
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:98
+#: includes/Gateway/InvoiceGateway.php:97
 msgid "Let approved organizations pay by invoice"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:102
+#: includes/Gateway/InvoiceGateway.php:101
 msgid "Title"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:104
+#: includes/Gateway/InvoiceGateway.php:103
 msgid "What the payment method is called at the checkout."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:109
+#: includes/Gateway/InvoiceGateway.php:108
 msgid "Description"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:111
-msgid "Shown under the payment method when the customer selects it. The agreed terms are added to it automatically."
+#: includes/Gateway/InvoiceGateway.php:110
+msgid "Shown under the payment method when the customer selects it. The credit still available is added to it automatically."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:116
+#: includes/Gateway/InvoiceGateway.php:115
 msgid "Instructions"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:118
+#: includes/Gateway/InvoiceGateway.php:117
 msgid "Shown on the order received page and in the order emails."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:123
+#: includes/Gateway/InvoiceGateway.php:122
 msgid "Offer it to"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:126
+#: includes/Gateway/InvoiceGateway.php:125
 msgid "Either way, an organization you have refused invoicing never sees it, and one you have allowed it always does."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:130
+#: includes/Gateway/InvoiceGateway.php:129
 msgid "Only the organizations I allow one by one"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:131
+#: includes/Gateway/InvoiceGateway.php:130
 msgid "Every organization that can place orders"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:135
-msgid "Default payment terms"
-msgstr ""
-
-#: includes/Gateway/InvoiceGateway.php:137
-msgid "Days an invoice is payable within, for an organization you have not agreed different terms with. Zero means payable on receipt."
-msgstr ""
-
-#: includes/Gateway/InvoiceGateway.php:147
+#: includes/Gateway/InvoiceGateway.php:134
 msgid "Order status"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:150
+#: includes/Gateway/InvoiceGateway.php:137
 msgid "On hold is the honest answer: nothing has been paid. Processing puts the order in your fulfilment queue, but WooCommerce records it as paid the moment it gets there, and a paid order stops counting against the credit limit."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:154
+#: includes/Gateway/InvoiceGateway.php:141
 msgid "On hold — awaiting payment of the invoice"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:155
+#: includes/Gateway/InvoiceGateway.php:142
 msgid "Processing — ready to fulfil"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:159
+#: includes/Gateway/InvoiceGateway.php:146
 msgid "Data"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:161
+#: includes/Gateway/InvoiceGateway.php:148
 msgid "What happens to the invoice terms you have agreed when this plugin is deleted from the Plugins screen."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:164
+#: includes/Gateway/InvoiceGateway.php:151
 msgid "On uninstall"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:166
+#: includes/Gateway/InvoiceGateway.php:153
 msgid "Delete every organization's invoice terms and credit limits when the plugin is deleted"
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:167
+#: includes/Gateway/InvoiceGateway.php:154
 msgid "Off by default. These are agreements with customers, and deleting the plugin should not delete them by accident. Orders and the terms recorded on them are never touched either way."
 msgstr ""
 
-#: includes/Gateway/InvoiceGateway.php:277
+#: includes/Gateway/InvoiceGateway.php:262
 msgid "That order could not be found."
 msgstr ""
 
-#. translators: %s: the date the invoice falls due.
-#: includes/Gateway/InvoiceGateway.php:319
-#, php-format
-msgid "Awaiting payment of the invoice, due %s."
+#: includes/Gateway/InvoiceGateway.php:298
+msgid "Awaiting payment of the invoice."
 msgstr ""
 
-#. translators: %s: the date the invoice falls due.
-#: includes/Gateway/InvoiceGateway.php:403
-#, php-format
-msgid "This invoice is due on %s."
-msgstr ""
-
-#: includes/Gateway/InvoiceGateway.php:422
+#: includes/Gateway/InvoiceGateway.php:369
 msgid "Paying by invoice is not available on this account. Please choose another payment method, or contact the shop."
 msgstr ""
 

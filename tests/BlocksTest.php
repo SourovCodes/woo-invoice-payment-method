@@ -73,7 +73,7 @@ class BlocksTest extends TestCase {
 	}
 
 	/**
-	 * The browser is told the same terms and the same credit the server has.
+	 * The browser is told the same credit the server has.
 	 */
 	public function testTheBrowserIsGivenTheSameAnswersTheServerHas() {
 		$this->enable_gateway();
@@ -84,9 +84,8 @@ class BlocksTest extends TestCase {
 		$this->set_terms(
 			$organization,
 			array(
-				'status'             => Terms::STATUS_ALLOWED,
-				'payment_terms_days' => 14,
-				'credit_limit'       => 1000,
+				'status'       => Terms::STATUS_ALLOWED,
+				'credit_limit' => 1000,
 			)
 		);
 		$this->act_as( $member );
@@ -97,7 +96,6 @@ class BlocksTest extends TestCase {
 
 		$data = $support->get_payment_method_data();
 
-		$this->assertStringContainsString( '14 days', $data['terms'] );
 		$this->assertStringContainsString( '600', $data['creditNotice'] );
 		$this->assertSame( Options::all()['title'], $data['title'] );
 	}

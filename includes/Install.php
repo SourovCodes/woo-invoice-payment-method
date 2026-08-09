@@ -7,16 +7,18 @@
 
 namespace WooInvoicePayment;
 
+use WooInvoicePayment\Gateway\Options;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Creates and upgrades the plugin's own table.
  *
  * One table, holding what the shop decided about one organization's invoicing: may it
- * buy on invoice at all, on what terms, and up to how much. It is a side table on
- * `woap_organizations` rather than three more columns in it, because the organization
- * plugin owns that schema and a plugin that can be deactivated must not leave columns
- * behind in somebody else's table.
+ * buy on invoice at all, and up to how much. It is a side table on
+ * `woap_organizations` rather than more columns in it, because the organization plugin
+ * owns that schema and a plugin that can be deactivated must not leave columns behind
+ * in somebody else's table.
  *
  * `organization_id` is the primary key, so "one organization has one set of invoice
  * terms" is a rule the database keeps rather than one every write has to remember —
@@ -62,10 +64,11 @@ final class Install {
 	}
 
 	/**
-	 * Create or update the table and record the schema version.
+	 * Bring the database up to the shipped schema and record the version.
 	 *
 	 * Idempotent: dbDelta() only issues the statements needed to reach the described
-	 * schema, so running this against an up-to-date database does nothing.
+	 * schema, and the two clean-up passes below both check before they write, so running
+	 * this against an up-to-date database does nothing.
 	 *
 	 * @return void
 	 */
@@ -76,7 +79,71 @@ final class Install {
 			dbDelta( $sql );
 		}
 
+		self::drop_removed_columns();
+		self::drop_retired_settings();
+
 		update_option( self::VERSION_OPTION, WOIP_DB_VERSION, false );
+	}
+
+	/**
+	 * Forget the gateway settings the plugin no longer has a field for.
+	 *
+	 * WC_Settings_API writes the whole settings array back on every save, and a key it
+	 * has no form field for is carried along untouched rather than dropped. A retired
+	 * setting therefore outlives its field with its last value intact, which is a
+	 * decision the shop can no longer see or change — and one that would come back to
+	 * life if a later release ever reused the name.
+	 *
+	 * @return void
+	 */
+	private static function drop_retired_settings() {
+		$settings = get_option( Options::OPTION_KEY, array() );
+
+		if ( ! is_array( $settings ) ) {
+			return;
+		}
+
+		$retired = array_intersect( array( 'payment_terms_days' ), array_keys( $settings ) );
+
+		if ( empty( $retired ) ) {
+			return;
+		}
+
+		update_option( Options::OPTION_KEY, array_diff_key( $settings, array_flip( $retired ) ) );
+	}
+
+	/**
+	 * Drop the columns the plugin used to have.
+	 *
+	 * Columns are added and widened by dbDelta() and never removed by it, so one left
+	 * out of schema() simply stays on every table that already has it, holding data
+	 * nothing reads and nothing maintains. This is the other half of removing a column,
+	 * and it runs after the dbDelta pass above, which is what guarantees the table is
+	 * there to alter.
+	 *
+	 * @return void
+	 */
+	private static function drop_removed_columns() {
+		global $wpdb;
+
+		$table = self::table( self::TERMS );
+
+		/*
+		 * `payment_terms_days` went with the payment terms themselves. Invoices are
+		 * raised in the shop's own accounting system, which is where a due date belongs;
+		 * this plugin decides who may buy on invoice and up to how much.
+		 */
+		foreach ( array( 'payment_terms_days' ) as $column ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from a class constant; the column is a placeholder.
+			$found = $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM {$table} LIKE %s", $column ) );
+
+			if ( null === $found ) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Neither a table nor a column name can be a placeholder; both come from constants in this file.
+			$wpdb->query( "ALTER TABLE {$table} DROP COLUMN {$column}" );
+		}
 	}
 
 	/**
@@ -157,10 +224,8 @@ final class Install {
 		$schema  = array();
 
 		/*
-		 * `payment_terms_days` and `credit_limit` are nullable, and NULL is not zero
-		 * here: it means "no answer of its own", which for the terms is "use the
-		 * gateway's default" and for the limit is "no limit". Zero is a real answer to
-		 * both — due immediately, and no credit at all — and a column that could not
+		 * `credit_limit` is nullable, and NULL is not zero here: it means "no limit",
+		 * where zero is the real answer of no credit at all. A column that could not
 		 * tell the two apart would make "unlimited" indistinguishable from "nothing".
 		 *
 		 * The money column is decimal rather than float, for the reason every money
@@ -170,7 +235,6 @@ final class Install {
 		$schema[] = "CREATE TABLE {$terms} (
 			organization_id bigint(20) unsigned NOT NULL,
 			status varchar(20) NOT NULL default 'default',
-			payment_terms_days smallint(5) unsigned NULL default null,
 			credit_limit decimal(19,4) NULL default null,
 			note varchar(500) NOT NULL default '',
 			date_modified datetime NULL default null,

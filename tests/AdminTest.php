@@ -16,9 +16,9 @@ use WooOrgAccounts\Data\Organization;
  * Covers the one handler in this plugin that writes anything from a form.
  *
  * The two things worth asserting are that it cannot be reached without both a nonce
- * and the capability, and that the ambiguous fields — the ones where an empty box
- * could mean two opposite things — are read from the radio that names the answer
- * rather than from the box.
+ * and the capability, and that the ambiguous field — the one where an empty box could
+ * mean two opposite things — is read from the radio that names the answer rather than
+ * from the box.
  */
 class AdminTest extends TestCase {
 
@@ -153,12 +153,10 @@ class AdminTest extends TestCase {
 		$location = $this->submit(
 			$organization,
 			array(
-				'status'             => Terms::STATUS_ALLOWED,
-				'terms_mode'         => 'custom',
-				'payment_terms_days' => '14',
-				'credit_mode'        => 'limited',
-				'credit_limit'       => '2500',
-				'note'               => 'Agreed with Ada.',
+				'status'       => Terms::STATUS_ALLOWED,
+				'credit_mode'  => 'limited',
+				'credit_limit' => '2500',
+				'note'         => 'Agreed with Ada.',
 			)
 		);
 
@@ -167,7 +165,6 @@ class AdminTest extends TestCase {
 		$stored = TermsRepository::find( $organization->get_id() );
 
 		$this->assertSame( Terms::STATUS_ALLOWED, $stored->get_status() );
-		$this->assertSame( 14, $stored->get_payment_terms_days() );
 		$this->assertSame( 2500.0, $stored->get_credit_limit() );
 		$this->assertSame( 'Agreed with Ada.', $stored->get_note() );
 	}
@@ -175,9 +172,9 @@ class AdminTest extends TestCase {
 	/**
 	 * The radio is what the server reads, not whether the box happens to be filled in.
 	 *
-	 * This is the bug the pattern exists to prevent: a number left in the box from the
-	 * last edit would otherwise keep applying after somebody chose "use the default",
-	 * and an empty box cannot say whether "no limit" or "a limit of zero" was meant.
+	 * This is the bug the pattern exists to prevent: an amount left in the box from the
+	 * last edit would otherwise keep applying after somebody chose "no limit", and an
+	 * empty box cannot say whether "no limit" or "a limit of zero" was meant.
 	 */
 	public function testTheRadioDecidesRatherThanTheBox() {
 		$this->act_as_shop_manager();
@@ -187,18 +184,16 @@ class AdminTest extends TestCase {
 		$this->submit(
 			$organization,
 			array(
-				'status'             => Terms::STATUS_ALLOWED,
-				'terms_mode'         => 'default',
-				'payment_terms_days' => '14',
-				'credit_mode'        => 'none',
-				'credit_limit'       => '2500',
+				'status'       => Terms::STATUS_ALLOWED,
+				'credit_mode'  => 'none',
+				'credit_limit' => '2500',
 			)
 		);
 
-		$stored = TermsRepository::find( $organization->get_id() );
-
-		$this->assertNull( $stored->get_payment_terms_days(), 'A stale box overrode "use the default".' );
-		$this->assertNull( $stored->get_credit_limit(), 'A stale box overrode "no limit".' );
+		$this->assertNull(
+			TermsRepository::find( $organization->get_id() )->get_credit_limit(),
+			'A stale box overrode "no limit".'
+		);
 	}
 
 	/**
@@ -213,7 +208,6 @@ class AdminTest extends TestCase {
 			$organization,
 			array(
 				'status'       => Terms::STATUS_DEFAULT,
-				'terms_mode'   => 'default',
 				'credit_mode'  => 'limited',
 				'credit_limit' => '0',
 			)
@@ -239,7 +233,6 @@ class AdminTest extends TestCase {
 			$organization,
 			array(
 				'status'       => Terms::STATUS_ALLOWED,
-				'terms_mode'   => 'default',
 				'credit_mode'  => 'limited',
 				'credit_limit' => 'quite a lot',
 			)
@@ -261,7 +254,6 @@ class AdminTest extends TestCase {
 			$organization,
 			array(
 				'status'       => Terms::STATUS_DEFAULT,
-				'terms_mode'   => 'default',
 				'credit_mode'  => 'limited',
 				'credit_limit' => '-50',
 			)
@@ -284,7 +276,6 @@ class AdminTest extends TestCase {
 			$organization,
 			array(
 				'status'      => Terms::STATUS_DEFAULT,
-				'terms_mode'  => 'default',
 				'credit_mode' => 'none',
 			)
 		);

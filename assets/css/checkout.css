@@ -1,5 +1,5 @@
 /**
- * Frontend: the payment method at the checkout, and the invoice block on an order.
+ * Frontend: the payment method at the checkout.
  *
  * No colour literals outside a var() fallback. Every colour reads a Woodmart custom
  * property, because the organization plugin this one depends on requires that theme
@@ -9,38 +9,10 @@
  * token.
  */
 
-.woip-terms,
 .woip-credit {
 	margin: 0 0 8px;
 	color: var(--wd-text-color, #777);
 	font-size: 14px;
-	line-height: 1.6;
-}
-
-.woip-credit {
 	font-weight: 600;
-}
-
-.woip-invoice-details {
-	margin-top: 30px;
-}
-
-.woip-invoice-details__list {
-	margin: 0;
-	padding: 0;
-	border: 1px solid var(--brdcolor-gray-300, #e9e9e9);
-	list-style: none;
-}
-
-.woip-invoice-details__item {
-	display: flex;
-	justify-content: space-between;
-	gap: 20px;
-	padding: 10px 15px;
-	border-bottom: 1px solid var(--brdcolor-gray-300, #e9e9e9);
-	color: var(--wd-text-color, #777);
-}
-
-.woip-invoice-details__item:last-child {
-	border-bottom: none;
+	line-height: 1.6;
 }

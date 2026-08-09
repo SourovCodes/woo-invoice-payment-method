@@ -3,8 +3,8 @@
  * Plugin Name:          WooCommerce Invoice Payment Method
  * Plugin URI:           https://github.com/SourovCodes/woo-invoice-payment-method
  * Update URI:           https://github.com/SourovCodes/woo-invoice-payment-method
- * Description:          Adds a Pay by invoice payment method to the WooCommerce checkout, offered only to the organizations a shop has approved for it, on the payment terms and credit limit it set them.
- * Version:              0.1.0
+ * Description:          Adds a Pay by invoice payment method to the WooCommerce checkout, offered only to the organizations a shop has approved for it, up to the credit limit it set them.
+ * Version:              0.2.0
  * Requires at least:    7.0
  * Requires PHP:         8.2
  * Requires Plugins:     woocommerce, woo-organization-accounts-pro
@@ -23,7 +23,7 @@ namespace WooInvoicePayment;
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WOIP_VERSION', '0.1.0' );
+define( 'WOIP_VERSION', '0.2.0' );
 define( 'WOIP_PLUGIN_FILE', __FILE__ );
 define( 'WOIP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WOIP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -47,7 +47,7 @@ define( 'WOIP_MIN_WOAP_VERSION', '0.3.0' );
  * Bumped whenever includes/Install.php changes the table, which is what makes an
  * existing site run dbDelta again on the next load.
  */
-define( 'WOIP_DB_VERSION', '1.0.0' );
+define( 'WOIP_DB_VERSION', '1.1.0' );
 
 /**
  * Priority this plugin boots at on `plugins_loaded`.

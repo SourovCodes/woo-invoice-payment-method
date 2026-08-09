@@ -49,8 +49,8 @@ final class Eligibility {
 	 * The organization a user would be invoicing, when they may be invoiced at all.
 	 *
 	 * Returned rather than a bare bool because every caller that wants the answer also
-	 * wants the organization it applies to — the credit check, the order stamp and the
-	 * terms shown at checkout all need it, and looking it up again would be a second
+	 * wants the organization it applies to — the credit check and the credit still
+	 * available at the checkout both need it, and looking it up again would be a second
 	 * chance to look it up differently.
 	 *
 	 * @param int $user_id User ID, or 0 for the current user.
@@ -92,55 +92,5 @@ final class Eligibility {
 		}
 
 		return Options::AVAILABILITY_ALL === Options::availability();
-	}
-
-	/**
-	 * How many days an organization has to pay.
-	 *
-	 * @param int $organization_id Organization ID.
-	 * @return int Days. Zero means due on receipt.
-	 */
-	public static function payment_terms_days( $organization_id ) {
-		$days = TermsRepository::find( $organization_id )->get_payment_terms_days();
-
-		return null === $days ? Options::payment_terms_days() : (int) $days;
-	}
-
-	/**
-	 * The date an invoice raised now would fall due.
-	 *
-	 * Computed from the site's own clock in UTC and stored as a plain date, because a
-	 * due date is a day rather than a moment: an invoice due on the 30th is due on the
-	 * 30th wherever the customer reads it.
-	 *
-	 * @param int      $organization_id Organization ID.
-	 * @param int|null $from            Timestamp to count from, or null for now.
-	 * @return string Date in Y-m-d.
-	 */
-	public static function due_date( $organization_id, $from = null ) {
-		$from = null === $from ? time() : (int) $from;
-		$days = self::payment_terms_days( $organization_id );
-
-		return gmdate( 'Y-m-d', $from + ( $days * DAY_IN_SECONDS ) );
-	}
-
-	/**
-	 * The payment terms as a sentence, for the checkout and the order.
-	 *
-	 * @param int $organization_id Organization ID.
-	 * @return string Translated sentence.
-	 */
-	public static function terms_summary( $organization_id ) {
-		$days = self::payment_terms_days( $organization_id );
-
-		if ( 0 === $days ) {
-			return __( 'Payable on receipt.', 'woo-invoice-payment-method' );
-		}
-
-		return sprintf(
-			/* translators: %d: number of days the invoice is payable within. */
-			_n( 'Payable within %d day of the invoice date.', 'Payable within %d days of the invoice date.', $days, 'woo-invoice-payment-method' ),
-			$days
-		);
 	}
 }

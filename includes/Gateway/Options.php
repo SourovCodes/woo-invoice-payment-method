@@ -56,7 +56,6 @@ final class Options {
 			'description'              => __( 'Receive an invoice with your delivery and pay it within the agreed terms.', 'woo-invoice-payment-method' ),
 			'instructions'             => __( 'Your invoice follows separately. Please quote the order number when you pay it.', 'woo-invoice-payment-method' ),
 			'availability'             => self::AVAILABILITY_SELECTED,
-			'payment_terms_days'       => 30,
 			'order_status'             => 'on-hold',
 			'remove_data_on_uninstall' => 'no',
 		);
@@ -107,15 +106,6 @@ final class Options {
 		$value = (string) self::get( 'availability' );
 
 		return self::AVAILABILITY_ALL === $value ? self::AVAILABILITY_ALL : self::AVAILABILITY_SELECTED;
-	}
-
-	/**
-	 * How long an invoice is payable for by default, in days.
-	 *
-	 * @return int Days. Zero means due on receipt.
-	 */
-	public static function payment_terms_days() {
-		return absint( self::get( 'payment_terms_days' ) );
 	}
 
 	/**

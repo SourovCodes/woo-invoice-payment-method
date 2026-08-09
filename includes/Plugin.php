@@ -7,9 +7,7 @@
 
 namespace WooInvoicePayment;
 
-use WooInvoicePayment\Admin\OrderColumn;
 use WooInvoicePayment\Admin\OrganizationTerms;
-use WooInvoicePayment\Checkout\OrderDetails;
 use WooInvoicePayment\Gateway\Gateways;
 
 defined( 'ABSPATH' ) || exit;
@@ -100,11 +98,9 @@ final class Plugin {
 		 * REST request that is neither an admin request nor a page load.
 		 */
 		( new Gateways() )->register();
-		( new OrderDetails() )->register();
 
 		if ( is_admin() ) {
 			( new OrganizationTerms() )->register();
-			( new OrderColumn() )->register();
 		}
 
 		/**

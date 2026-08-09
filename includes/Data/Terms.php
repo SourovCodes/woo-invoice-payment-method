@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * What the shop decided about one organization's invoicing.
  *
- * Three answers, and each has an explicit "no answer of its own" state rather than a
+ * Two answers, and each has an explicit "no answer of its own" state rather than a
  * value that has to be read as one:
  *
  * - `status` says whether this organization may pay by invoice. STATUS_DEFAULT means
@@ -20,8 +20,6 @@ defined( 'ABSPATH' ) || exit;
  *   answer from STATUS_BLOCKED and has to stay tellable apart from it — a shop that
  *   offers invoicing to everyone and a shop that refused this one customer are not the
  *   same shop.
- * - `payment_terms_days` is null when the gateway's default applies. Zero is a real
- *   answer meaning due on receipt.
  * - `credit_limit` is null when there is no limit. Zero is a real answer meaning no
  *   credit at all, which is why "unlimited" cannot be stored as zero.
  *
@@ -66,11 +64,10 @@ class Terms {
 	 */
 	public static function defaults() {
 		return array(
-			'status'             => self::STATUS_DEFAULT,
-			'payment_terms_days' => null,
-			'credit_limit'       => null,
-			'note'               => '',
-			'date_modified'      => null,
+			'status'        => self::STATUS_DEFAULT,
+			'credit_limit'  => null,
+			'note'          => '',
+			'date_modified' => null,
 		);
 	}
 
@@ -137,10 +134,10 @@ class Terms {
 	 * Write a column.
 	 *
 	 * Anything that is not a declared column is ignored rather than stored, so a stray
-	 * form field can never reach the database as a column nobody expected. The two
-	 * nullable columns keep null as null and cast everything else, because null is the
-	 * value that carries meaning here and `(int) null` would silently turn "no limit"
-	 * into "no credit".
+	 * form field can never reach the database as a column nobody expected. The nullable
+	 * column keeps null as null and casts everything else, because null is the value
+	 * that carries meaning here and `(float) null` would silently turn "no limit" into
+	 * "no credit".
 	 *
 	 * @param string $key   Column name.
 	 * @param mixed  $value Value.
@@ -148,12 +145,6 @@ class Terms {
 	 */
 	public function set( $key, $value ) {
 		if ( ! array_key_exists( $key, $this->data ) ) {
-			return $this;
-		}
-
-		if ( 'payment_terms_days' === $key ) {
-			$this->data[ $key ] = ( null === $value || '' === $value ) ? null : absint( $value );
-
 			return $this;
 		}
 
@@ -212,15 +203,6 @@ class Terms {
 	}
 
 	/**
-	 * How many days this organization has to pay, or null to use the gateway's default.
-	 *
-	 * @return int|null Days, or null.
-	 */
-	public function get_payment_terms_days() {
-		return $this->data['payment_terms_days'];
-	}
-
-	/**
 	 * How much this organization may owe at once, or null when it is not limited.
 	 *
 	 * @return float|null Amount in the shop's currency, or null.
@@ -257,7 +239,6 @@ class Terms {
 	 */
 	public function is_default() {
 		return self::STATUS_DEFAULT === $this->get_status()
-			&& null === $this->get_payment_terms_days()
 			&& null === $this->get_credit_limit()
 			&& '' === $this->get_note();
 	}

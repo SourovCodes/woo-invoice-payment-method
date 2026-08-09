@@ -11,7 +11,7 @@ use WooInvoicePayment\Data\Terms;
 use WooInvoicePayment\Data\TermsRepository;
 
 /**
- * Covers the three answers a set of terms holds, and the fact that each one has a
+ * Covers the two answers a set of terms holds, and the fact that each one has a
  * "nothing decided" state that is not the same as its zero.
  */
 class TermsTest extends TestCase {
@@ -24,34 +24,28 @@ class TermsTest extends TestCase {
 
 		$this->assertSame( 7, $terms->get_organization_id() );
 		$this->assertSame( Terms::STATUS_DEFAULT, $terms->get_status() );
-		$this->assertNull( $terms->get_payment_terms_days() );
 		$this->assertNull( $terms->get_credit_limit() );
 		$this->assertFalse( $terms->has_credit_limit() );
 		$this->assertTrue( $terms->is_default() );
 	}
 
 	/**
-	 * Zero is a real answer to both numbers, and null is a different one.
+	 * Zero is a real answer to the limit, and null is a different one.
 	 *
-	 * This is the whole reason both columns are nullable. Payable on receipt is zero
-	 * days; no credit at all is a limit of zero; and neither of those is "use the
-	 * default" or "no limit".
+	 * This is the whole reason the column is nullable: no credit at all is a limit of
+	 * zero, and that is not "no limit".
 	 */
 	public function testZeroAndNullAreDifferentAnswers() {
 		$terms = new Terms( 1 );
 
-		$terms->set( 'payment_terms_days', 0 );
 		$terms->set( 'credit_limit', 0 );
 
-		$this->assertSame( 0, $terms->get_payment_terms_days() );
 		$this->assertSame( 0.0, $terms->get_credit_limit() );
 		$this->assertTrue( $terms->has_credit_limit(), 'A limit of zero is a limit.' );
 		$this->assertFalse( $terms->is_default() );
 
-		$terms->set( 'payment_terms_days', null );
 		$terms->set( 'credit_limit', null );
 
-		$this->assertNull( $terms->get_payment_terms_days() );
 		$this->assertNull( $terms->get_credit_limit() );
 		$this->assertFalse( $terms->has_credit_limit() );
 	}
@@ -62,14 +56,8 @@ class TermsTest extends TestCase {
 	public function testAnEmptyFieldIsNotZero() {
 		$terms = new Terms( 1 );
 
-		$terms->set_props(
-			array(
-				'payment_terms_days' => '',
-				'credit_limit'       => '',
-			)
-		);
+		$terms->set_props( array( 'credit_limit' => '' ) );
 
-		$this->assertNull( $terms->get_payment_terms_days() );
 		$this->assertNull( $terms->get_credit_limit() );
 	}
 
@@ -110,17 +98,15 @@ class TermsTest extends TestCase {
 		$this->set_terms(
 			$organization,
 			array(
-				'status'             => Terms::STATUS_ALLOWED,
-				'payment_terms_days' => 14,
-				'credit_limit'       => 2500.5,
-				'note'               => 'Agreed with Ada.',
+				'status'       => Terms::STATUS_ALLOWED,
+				'credit_limit' => 2500.5,
+				'note'         => 'Agreed with Ada.',
 			)
 		);
 
 		$stored = TermsRepository::find( $organization->get_id() );
 
 		$this->assertSame( Terms::STATUS_ALLOWED, $stored->get_status() );
-		$this->assertSame( 14, $stored->get_payment_terms_days() );
 		$this->assertSame( 2500.5, $stored->get_credit_limit() );
 		$this->assertSame( 'Agreed with Ada.', $stored->get_note() );
 	}
@@ -128,8 +114,8 @@ class TermsTest extends TestCase {
 	/**
 	 * A null stays null through the database rather than arriving back as zero.
 	 *
-	 * $wpdb has no format specifier for null, so the columns are left out of the
-	 * statement instead. Writing them as %d would turn "no limit" into "no credit",
+	 * $wpdb has no format specifier for null, so the column is left out of the
+	 * statement instead. Writing it as %f would turn "no limit" into "no credit",
 	 * which is the opposite instruction.
 	 */
 	public function testNullsSurviveTheRoundTrip() {
@@ -140,7 +126,6 @@ class TermsTest extends TestCase {
 		$stored = TermsRepository::find( $organization->get_id() );
 
 		$this->assertSame( Terms::STATUS_BLOCKED, $stored->get_status() );
-		$this->assertNull( $stored->get_payment_terms_days() );
 		$this->assertNull( $stored->get_credit_limit() );
 	}
 

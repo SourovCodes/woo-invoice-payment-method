@@ -20,7 +20,7 @@ use WooOrgAccounts\Labels;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Who may buy on invoice, on what terms, and up to how much.
+ * Who may buy on invoice, and up to how much.
  *
  * The gateway's own settings screen answers the questions that are the same for every
  * customer. This one answers the questions that are not, and it is a separate screen
@@ -32,10 +32,10 @@ defined( 'ABSPATH' ) || exit;
  * only in a query argument the form does not post back, so a rejected submission
  * returns as a blank form and saving again writes the wrong organization's terms.
  *
- * The two settings whose stored form is ambiguous — terms and credit limit — are asked
- * as a radio naming the answer plus a field for the number, never as a field whose
- * emptiness has to be read as a decision. "No credit limit" and "a limit of zero" are
- * opposite answers, and a blank box cannot say which one was meant.
+ * The one setting whose stored form is ambiguous — the credit limit — is asked as a
+ * radio naming the answer plus a field for the number, never as a field whose emptiness
+ * has to be read as a decision. "No credit limit" and "a limit of zero" are opposite
+ * answers, and a blank box cannot say which one was meant.
  */
 class OrganizationTerms {
 
@@ -68,6 +68,26 @@ class OrganizationTerms {
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		add_action( 'admin_post_woip_save_terms', array( $this, 'handle_save' ) );
 		add_action( 'admin_post_woip_check_updates', array( $this, 'handle_check_updates' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+	}
+
+	/**
+	 * Load the admin stylesheet, and only on this screen.
+	 *
+	 * @param string $hook_suffix Current admin page.
+	 * @return void
+	 */
+	public function enqueue_styles( $hook_suffix ) {
+		if ( false === strpos( (string) $hook_suffix, self::PAGE_SLUG ) ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'woip-admin',
+			WOIP_PLUGIN_URL . 'assets/css/admin.css',
+			array(),
+			WOIP_VERSION
+		);
 	}
 
 	/**
@@ -151,7 +171,7 @@ class OrganizationTerms {
 			'saved'   => array( 'success', __( 'The invoice terms were saved.', 'woo-invoice-payment-method' ) ),
 			'cleared' => array( 'success', __( 'The invoice terms were cleared. This account now follows the payment method setting.', 'woo-invoice-payment-method' ) ),
 			'unknown' => array( 'error', __( 'That account no longer exists.', 'woo-invoice-payment-method' ) ),
-			'invalid' => array( 'error', __( 'The credit limit and the payment terms have to be numbers, and neither can be negative.', 'woo-invoice-payment-method' ) ),
+			'invalid' => array( 'error', __( 'The credit limit has to be a number, and it cannot be negative.', 'woo-invoice-payment-method' ) ),
 		);
 
 		if ( ! isset( $messages[ $notice ] ) ) {
@@ -212,13 +232,12 @@ class OrganizationTerms {
 		printf( '<th scope="col">%s</th>', esc_html( Labels::organization() ) );
 		printf( '<th scope="col">%s</th>', esc_html__( 'Account status', 'woo-invoice-payment-method' ) );
 		printf( '<th scope="col">%s</th>', esc_html__( 'Invoicing', 'woo-invoice-payment-method' ) );
-		printf( '<th scope="col">%s</th>', esc_html__( 'Payment terms', 'woo-invoice-payment-method' ) );
 		printf( '<th scope="col">%s</th>', esc_html__( 'Credit limit', 'woo-invoice-payment-method' ) );
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $organizations ) ) {
 			printf(
-				'<tr><td colspan="5">%s</td></tr>',
+				'<tr><td colspan="4">%s</td></tr>',
 				esc_html(
 					sprintf(
 						/* translators: %s: the plural organization noun for the site's mode. */
@@ -346,7 +365,6 @@ class OrganizationTerms {
 	 * @return void
 	 */
 	private function render_row( Organization $organization, Terms $terms ) {
-		$days  = $terms->get_payment_terms_days();
 		$limit = $terms->get_credit_limit();
 
 		echo '<tr>';
@@ -363,23 +381,6 @@ class OrganizationTerms {
 			'<td><span class="woip-status woip-status--%1$s">%2$s</span></td>',
 			esc_attr( $terms->get_status() ),
 			esc_html( $this->invoicing_label( $terms ) )
-		);
-
-		printf(
-			'<td>%s</td>',
-			esc_html(
-				null === $days
-					? sprintf(
-						/* translators: %d: the default number of days set on the payment method. */
-						__( 'Default (%d days)', 'woo-invoice-payment-method' ),
-						Options::payment_terms_days()
-					)
-					: sprintf(
-						/* translators: %d: number of days the invoice is payable within. */
-						_n( '%d day', '%d days', (int) $days, 'woo-invoice-payment-method' ),
-						(int) $days
-					)
-			)
 		);
 
 		printf(
@@ -507,7 +508,6 @@ class OrganizationTerms {
 		echo '<table class="form-table" role="presentation"><tbody>';
 
 		$this->render_status_row( $terms );
-		$this->render_payment_terms_row( $terms );
 		$this->render_credit_limit_row( $terms );
 		$this->render_note_row( $terms );
 
@@ -545,44 +545,6 @@ class OrganizationTerms {
 		printf(
 			'</fieldset><p class="description">%s</p></td></tr>',
 			esc_html__( 'The first answer follows whatever the payment method is set to offer. The other two are decisions about this account and outlive a change to that setting.', 'woo-invoice-payment-method' )
-		);
-	}
-
-	/**
-	 * The payment terms choice.
-	 *
-	 * @param Terms $terms The terms.
-	 * @return void
-	 */
-	private function render_payment_terms_row( Terms $terms ) {
-		$days   = $terms->get_payment_terms_days();
-		$custom = null !== $days;
-
-		printf( '<tr><th scope="row">%s</th><td><fieldset class="woip-choice">', esc_html__( 'Payment terms', 'woo-invoice-payment-method' ) );
-
-		printf(
-			'<label><input type="radio" name="terms_mode" value="default"%1$s> %2$s</label><br>',
-			checked( $custom, false, false ),
-			esc_html(
-				sprintf(
-					/* translators: %d: the default number of days set on the payment method. */
-					__( 'Use the default of %d days', 'woo-invoice-payment-method' ),
-					Options::payment_terms_days()
-				)
-			)
-		);
-
-		printf(
-			'<label><input type="radio" name="terms_mode" value="custom"%1$s> %2$s</label> <input type="number" name="payment_terms_days" class="small-text" min="0" max="365" step="1" value="%3$s"> %4$s',
-			checked( $custom, true, false ),
-			esc_html__( 'Agree different terms:', 'woo-invoice-payment-method' ),
-			esc_attr( $custom ? (string) $days : '' ),
-			esc_html__( 'days', 'woo-invoice-payment-method' )
-		);
-
-		printf(
-			'</fieldset><p class="description">%s</p></td></tr>',
-			esc_html__( 'Zero days means payable on receipt. The terms are copied onto each order as it is placed, so changing them here never moves the due date of an invoice already raised.', 'woo-invoice-payment-method' )
 		);
 	}
 
@@ -660,21 +622,8 @@ class OrganizationTerms {
 		}
 
 		$status      = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : Terms::STATUS_DEFAULT;
-		$terms_mode  = isset( $_POST['terms_mode'] ) ? sanitize_key( wp_unslash( $_POST['terms_mode'] ) ) : 'default';
 		$credit_mode = isset( $_POST['credit_mode'] ) ? sanitize_key( wp_unslash( $_POST['credit_mode'] ) ) : 'none';
 		$note        = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
-
-		$days = null;
-
-		if ( 'custom' === $terms_mode ) {
-			$raw = isset( $_POST['payment_terms_days'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_terms_days'] ) ) : '';
-
-			if ( '' === $raw || ! is_numeric( $raw ) || (float) $raw < 0 ) {
-				$this->redirect( $organization_id, 'invalid' );
-			}
-
-			$days = min( 365, absint( $raw ) );
-		}
 
 		$limit = null;
 
@@ -706,10 +655,9 @@ class OrganizationTerms {
 		$terms = new Terms( $organization_id );
 		$terms->set_props(
 			array(
-				'status'             => $status,
-				'payment_terms_days' => $days,
-				'credit_limit'       => $limit,
-				'note'               => mb_substr( $note, 0, 500 ),
+				'status'       => $status,
+				'credit_limit' => $limit,
+				'note'         => mb_substr( $note, 0, 500 ),
 			)
 		);
 
