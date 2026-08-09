@@ -1,0 +1,522 @@
+# Copyright (C) 2026 Sourov Biswas
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Invoice Payment Method 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-invoice-payment-method\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Deutsch\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-09T05:51:40+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: de_DE_formal\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: woo-invoice-payment-method\n"
+
+#. Plugin Name of the plugin
+#: woo-invoice-payment-method.php
+msgid "WooCommerce Invoice Payment Method"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: woo-invoice-payment-method.php
+msgid "https://github.com/SourovCodes/woo-invoice-payment-method"
+msgstr ""
+
+#. Description of the plugin
+#: woo-invoice-payment-method.php
+msgid "Adds a Pay by invoice payment method to the WooCommerce checkout, offered only to the organizations a shop has approved for it, on the payment terms and credit limit it set them."
+msgstr "Fügt der WooCommerce-Kasse die Zahlungsart Kauf auf Rechnung hinzu — angeboten nur den Organisationen, die der Shop dafür freigegeben hat, zu den Zahlungszielen und Kreditlimits, die er ihnen gesetzt hat."
+
+#. Author of the plugin
+#: woo-invoice-payment-method.php
+msgid "Sourov Biswas"
+msgstr ""
+
+#: includes/Admin/OrderColumn.php:54
+#: includes/Admin/OrderColumn.php:59
+#: includes/Checkout/OrderDetails.php:71
+msgid "Invoice due"
+msgstr "Rechnung fällig"
+
+#. translators: %s: the date the invoice fell due.
+#: includes/Admin/OrderColumn.php:100
+#: includes/Checkout/OrderDetails.php:74
+#, php-format
+msgid "%s — overdue"
+msgstr "%s — überfällig"
+
+#: includes/Admin/OrderColumn.php:110
+msgid "Paid"
+msgstr "Bezahlt"
+
+#: includes/Admin/OrganizationTerms.php:81
+#: includes/Admin/OrganizationTerms.php:82
+#: includes/Admin/OrganizationTerms.php:197
+#: includes/Admin/OrganizationTerms.php:466
+msgid "Invoice Payments"
+msgstr "Rechnungszahlungen"
+
+#: includes/Admin/OrganizationTerms.php:151
+msgid "The invoice terms were saved."
+msgstr "Die Rechnungskonditionen wurden gespeichert."
+
+#: includes/Admin/OrganizationTerms.php:152
+msgid "The invoice terms were cleared. This account now follows the payment method setting."
+msgstr "Die Rechnungskonditionen wurden gelöscht. Dieses Konto folgt jetzt der Einstellung der Zahlungsart."
+
+#: includes/Admin/OrganizationTerms.php:153
+#: includes/Admin/OrganizationTerms.php:467
+msgid "That account no longer exists."
+msgstr "Dieses Konto existiert nicht mehr."
+
+#: includes/Admin/OrganizationTerms.php:154
+msgid "The credit limit and the payment terms have to be numbers, and neither can be negative."
+msgstr "Kreditlimit und Zahlungsziel müssen Zahlen sein, und keines von beiden darf negativ sein."
+
+#: includes/Admin/OrganizationTerms.php:205
+msgid "Search accounts"
+msgstr "Konten durchsuchen"
+
+#: includes/Admin/OrganizationTerms.php:213
+msgid "Account status"
+msgstr "Kontostatus"
+
+#: includes/Admin/OrganizationTerms.php:214
+#: includes/Admin/OrganizationTerms.php:534
+msgid "Invoicing"
+msgstr "Rechnungskauf"
+
+#: includes/Admin/OrganizationTerms.php:215
+#: includes/Admin/OrganizationTerms.php:561
+#: includes/Checkout/OrderDetails.php:59
+#: includes/Checkout/OrderDetails.php:61
+msgid "Payment terms"
+msgstr "Zahlungsziel"
+
+#: includes/Admin/OrganizationTerms.php:216
+#: includes/Admin/OrganizationTerms.php:598
+msgid "Credit limit"
+msgstr "Kreditlimit"
+
+#. translators: %s: the plural organization noun for the site's mode.
+#: includes/Admin/OrganizationTerms.php:225
+#, php-format
+msgid "No %s to show."
+msgstr "Keine %s vorhanden."
+
+#: includes/Admin/OrganizationTerms.php:258
+msgid "Updates"
+msgstr "Updates"
+
+#. translators: 1: available version, 2: installed version.
+#: includes/Admin/OrganizationTerms.php:263
+#, php-format
+msgid "Version %1$s is available. You are running %2$s."
+msgstr "Version %1$s ist verfügbar. Sie nutzen %2$s."
+
+#. translators: %s: installed version.
+#: includes/Admin/OrganizationTerms.php:270
+#, php-format
+msgid "You are running the latest version, %s."
+msgstr "Sie nutzen die neueste Version, %s."
+
+#: includes/Admin/OrganizationTerms.php:274
+msgid "The last update check did not complete. GitHub may have been unreachable."
+msgstr "Die letzte Update-Prüfung wurde nicht abgeschlossen. Möglicherweise war GitHub nicht erreichbar."
+
+#: includes/Admin/OrganizationTerms.php:282
+msgid "Check for updates"
+msgstr "Nach Updates suchen"
+
+#: includes/Admin/OrganizationTerms.php:296
+#: includes/Admin/OrganizationTerms.php:650
+msgid "You do not have permission to do that."
+msgstr "Sie haben keine Berechtigung dafür."
+
+#: includes/Admin/OrganizationTerms.php:297
+#: includes/Admin/OrganizationTerms.php:651
+msgid "Permission denied"
+msgstr "Zugriff verweigert"
+
+#. translators: %s: the plural organization noun for the site's mode.
+#: includes/Admin/OrganizationTerms.php:317
+#, php-format
+msgid "Invoicing is currently offered to every %s that can place orders, except the ones refused it below."
+msgstr "Rechnungskauf wird derzeit allen %s angeboten, die bestellen dürfen — außer denen, die unten davon ausgeschlossen sind."
+
+#. translators: %s: the plural organization noun for the site's mode.
+#: includes/Admin/OrganizationTerms.php:322
+#, php-format
+msgid "Invoicing is currently offered only to the %s allowed it below."
+msgstr "Rechnungskauf wird derzeit nur den %s angeboten, die unten dafür freigegeben sind."
+
+#: includes/Admin/OrganizationTerms.php:330
+msgid "Payment method settings"
+msgstr "Einstellungen der Zahlungsart"
+
+#: includes/Admin/OrganizationTerms.php:336
+msgid "The Pay by invoice payment method is switched off, so nothing here is offered at the checkout yet."
+msgstr "Die Zahlungsart Kauf auf Rechnung ist ausgeschaltet, daher wird hiervon an der Kasse noch nichts angeboten."
+
+#. translators: %d: the default number of days set on the payment method.
+#: includes/Admin/OrganizationTerms.php:374
+#, php-format
+msgid "Default (%d days)"
+msgstr "Standard (%d Tage)"
+
+#. translators: %d: number of days the invoice is payable within.
+#: includes/Admin/OrganizationTerms.php:379
+#: includes/Checkout/OrderDetails.php:63
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d Tag"
+msgstr[1] "%d Tage"
+
+#: includes/Admin/OrganizationTerms.php:387
+#: includes/Admin/OrganizationTerms.php:603
+msgid "No limit"
+msgstr "Kein Limit"
+
+#: includes/Admin/OrganizationTerms.php:404
+msgid "Allowed"
+msgstr "Erlaubt"
+
+#: includes/Admin/OrganizationTerms.php:408
+msgid "Refused"
+msgstr "Abgelehnt"
+
+#: includes/Admin/OrganizationTerms.php:412
+msgid "Allowed by default"
+msgstr "Standardmäßig erlaubt"
+
+#: includes/Admin/OrganizationTerms.php:413
+msgid "Not offered by default"
+msgstr "Standardmäßig nicht angeboten"
+
+#: includes/Admin/OrganizationTerms.php:471
+#: includes/Admin/OrganizationTerms.php:521
+msgid "Back to the list"
+msgstr "Zurück zur Liste"
+
+#. translators: %s: the organization's name.
+#: includes/Admin/OrganizationTerms.php:485
+#, php-format
+msgid "Invoice terms for %s"
+msgstr "Rechnungskonditionen für %s"
+
+#. translators: %s: formatted amount currently outstanding on unpaid invoices.
+#: includes/Admin/OrganizationTerms.php:496
+#, php-format
+msgid "Currently outstanding on unpaid invoices: %s."
+msgstr "Derzeit offen aus unbezahlten Rechnungen: %s."
+
+#: includes/Admin/OrganizationTerms.php:516
+msgid "Save invoice terms"
+msgstr "Rechnungskonditionen speichern"
+
+#: includes/Admin/OrganizationTerms.php:547
+msgid "The first answer follows whatever the payment method is set to offer. The other two are decisions about this account and outlive a change to that setting."
+msgstr "Die erste Antwort folgt dem, was die Zahlungsart insgesamt anbietet. Die beiden anderen sind Entscheidungen über dieses Konto und überdauern eine Änderung dieser Einstellung."
+
+#. translators: %d: the default number of days set on the payment method.
+#: includes/Admin/OrganizationTerms.php:569
+#, php-format
+msgid "Use the default of %d days"
+msgstr "Den Standard von %d Tagen verwenden"
+
+#: includes/Admin/OrganizationTerms.php:578
+msgid "Agree different terms:"
+msgstr "Abweichendes Zahlungsziel vereinbaren:"
+
+#: includes/Admin/OrganizationTerms.php:580
+msgid "days"
+msgstr "Tage"
+
+#: includes/Admin/OrganizationTerms.php:585
+msgid "Zero days means payable on receipt. The terms are copied onto each order as it is placed, so changing them here never moves the due date of an invoice already raised."
+msgstr "Null Tage bedeutet zahlbar sofort nach Erhalt. Das Zahlungsziel wird bei der Bestellung auf den Auftrag kopiert; eine Änderung hier verschiebt daher nie die Fälligkeit einer bereits gestellten Rechnung."
+
+#: includes/Admin/OrganizationTerms.php:609
+msgid "Owe no more than:"
+msgstr "Höchstens offen haben:"
+
+#: includes/Admin/OrganizationTerms.php:616
+msgid "Checked against every unpaid invoice order this account has open, when it tries to place another. A limit of zero refuses new invoices while anything is outstanding, which is not the same as no limit."
+msgstr "Wird gegen alle unbezahlten Rechnungsbestellungen dieses Kontos geprüft, sobald es eine weitere aufgeben will. Ein Limit von null lehnt neue Rechnungen ab, solange etwas offen ist — das ist nicht dasselbe wie kein Limit."
+
+#: includes/Admin/OrganizationTerms.php:627
+msgid "Note"
+msgstr "Notiz"
+
+#: includes/Admin/OrganizationTerms.php:636
+msgid "For the shop only. The customer never sees it."
+msgstr "Nur für den Shop. Der Kunde sieht sie nie."
+
+#: includes/Checkout/OrderDetails.php:53
+#: includes/Gateway/Blocks/InvoiceBlockSupport.php:106
+#: includes/Gateway/Blocks/InvoiceBlockSupport.php:111
+#: includes/Gateway/InvoiceGateway.php:164
+#: includes/Gateway/InvoiceGateway.php:263
+#: includes/Gateway/InvoiceGateway.php:299
+#: includes/Gateway/InvoiceGateway.php:357
+msgid "Purchase order number"
+msgstr "Bestellreferenz"
+
+#: includes/Checkout/OrderDetails.php:59
+msgid "Payable on receipt"
+msgstr "Zahlbar sofort nach Erhalt"
+
+#: includes/Checkout/OrderDetails.php:101
+#: includes/Checkout/OrderDetails.php:140
+#: includes/Checkout/OrderDetails.php:151
+#: includes/Checkout/OrderDetails.php:179
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. translators: %s: formatted amount already outstanding.
+#: includes/Credit.php:189
+#, php-format
+msgid "This order cannot go on invoice: %s is already outstanding, which is the whole of the agreed credit. Please settle an open invoice, or choose another payment method."
+msgstr "Diese Bestellung kann nicht auf Rechnung gehen: %s sind bereits offen und damit der gesamte vereinbarte Kreditrahmen. Bitte begleichen Sie eine offene Rechnung oder wählen Sie eine andere Zahlungsart."
+
+#. translators: 1: formatted order total, 2: formatted amount of credit still available.
+#: includes/Credit.php:196
+#, php-format
+msgid "This order cannot go on invoice: it comes to %1$s and only %2$s of the agreed credit is left. Please settle an open invoice, or choose another payment method."
+msgstr "Diese Bestellung kann nicht auf Rechnung gehen: Sie beläuft sich auf %1$s, und vom vereinbarten Kreditrahmen sind nur noch %2$s frei. Bitte begleichen Sie eine offene Rechnung oder wählen Sie eine andere Zahlungsart."
+
+#: includes/Data/Terms.php:84
+msgid "Follow the payment method setting"
+msgstr "Der Einstellung der Zahlungsart folgen"
+
+#: includes/Data/Terms.php:85
+msgid "Always allowed"
+msgstr "Immer erlaubt"
+
+#: includes/Data/Terms.php:86
+msgid "Never allowed"
+msgstr "Nie erlaubt"
+
+#: includes/Eligibility.php:137
+msgid "Payable on receipt."
+msgstr "Zahlbar sofort nach Erhalt."
+
+#. translators: %d: number of days the invoice is payable within.
+#: includes/Eligibility.php:142
+#, php-format
+msgid "Payable within %d day of the invoice date."
+msgid_plural "Payable within %d days of the invoice date."
+msgstr[0] "Zahlbar innerhalb von %d Tag ab Rechnungsdatum."
+msgstr[1] "Zahlbar innerhalb von %d Tagen ab Rechnungsdatum."
+
+#. translators: %s: formatted amount of credit still available.
+#: includes/Gateway/Blocks/InvoiceBlockSupport.php:100
+#: includes/Gateway/InvoiceGateway.php:235
+#, php-format
+msgid "Credit still available: %s."
+msgstr "Noch verfügbarer Kreditrahmen: %s."
+
+#: includes/Gateway/Blocks/InvoiceBlockSupport.php:107
+#: includes/Gateway/InvoiceGateway.php:266
+msgid "Your own reference for this purchase. It is printed on the invoice."
+msgstr "Ihre eigene Referenz für diesen Einkauf. Sie wird auf der Rechnung ausgewiesen."
+
+#. translators: %s: the purchase order field label.
+#: includes/Gateway/Blocks/InvoiceBlockSupport.php:110
+#: includes/Gateway/InvoiceGateway.php:298
+#: includes/Gateway/InvoiceGateway.php:356
+#, php-format
+msgid "%s is a required field."
+msgstr "%s ist ein Pflichtfeld."
+
+#: includes/Gateway/InvoiceGateway.php:66
+#: includes/Gateway/Options.php:70
+msgid "Pay by invoice"
+msgstr "Kauf auf Rechnung"
+
+#: includes/Gateway/InvoiceGateway.php:67
+msgid "Lets an organization complete the checkout without paying, and be invoiced on the terms you agreed with it. Offered only to the organizations you allow it to, and only up to the credit limit you set them."
+msgstr "Lässt eine Organisation die Kasse abschließen, ohne zu bezahlen, und stellt ihr zu dem Zahlungsziel in Rechnung, das Sie mit ihr vereinbart haben. Wird nur den Organisationen angeboten, denen Sie es erlauben, und nur bis zu dem Kreditlimit, das Sie ihnen setzen."
+
+#: includes/Gateway/InvoiceGateway.php:101
+msgid "Enable/Disable"
+msgstr "Aktivieren/Deaktivieren"
+
+#: includes/Gateway/InvoiceGateway.php:103
+msgid "Let approved organizations pay by invoice"
+msgstr "Freigegebenen Organisationen den Kauf auf Rechnung erlauben"
+
+#: includes/Gateway/InvoiceGateway.php:107
+msgid "Title"
+msgstr "Titel"
+
+#: includes/Gateway/InvoiceGateway.php:109
+msgid "What the payment method is called at the checkout."
+msgstr "Wie die Zahlungsart an der Kasse heißt."
+
+#: includes/Gateway/InvoiceGateway.php:114
+msgid "Description"
+msgstr "Beschreibung"
+
+#: includes/Gateway/InvoiceGateway.php:116
+msgid "Shown under the payment method when the customer selects it. The agreed terms are added to it automatically."
+msgstr "Wird unter der Zahlungsart angezeigt, wenn der Kunde sie auswählt. Das vereinbarte Zahlungsziel wird automatisch ergänzt."
+
+#: includes/Gateway/InvoiceGateway.php:121
+msgid "Instructions"
+msgstr "Hinweise"
+
+#: includes/Gateway/InvoiceGateway.php:123
+msgid "Shown on the order received page and in the order emails."
+msgstr "Wird auf der Bestellbestätigungsseite und in den Bestell-E-Mails angezeigt."
+
+#: includes/Gateway/InvoiceGateway.php:128
+msgid "Offer it to"
+msgstr "Anbieten an"
+
+#: includes/Gateway/InvoiceGateway.php:131
+msgid "Either way, an organization you have refused invoicing never sees it, and one you have allowed it always does."
+msgstr "In beiden Fällen gilt: Eine Organisation, der Sie den Rechnungskauf verweigert haben, sieht ihn nie, und eine, der Sie ihn erlaubt haben, sieht ihn immer."
+
+#: includes/Gateway/InvoiceGateway.php:135
+msgid "Only the organizations I allow one by one"
+msgstr "Nur die Organisationen, die ich einzeln freigebe"
+
+#: includes/Gateway/InvoiceGateway.php:136
+msgid "Every organization that can place orders"
+msgstr "Jede Organisation, die bestellen darf"
+
+#: includes/Gateway/InvoiceGateway.php:140
+msgid "Default payment terms"
+msgstr "Standard-Zahlungsziel"
+
+#: includes/Gateway/InvoiceGateway.php:142
+msgid "Days an invoice is payable within, for an organization you have not agreed different terms with. Zero means payable on receipt."
+msgstr "Tage, innerhalb derer eine Rechnung zahlbar ist — für Organisationen, mit denen Sie kein abweichendes Zahlungsziel vereinbart haben. Null bedeutet zahlbar sofort nach Erhalt."
+
+#: includes/Gateway/InvoiceGateway.php:152
+msgid "Order status"
+msgstr "Bestellstatus"
+
+#: includes/Gateway/InvoiceGateway.php:155
+msgid "On hold is the honest answer: nothing has been paid. Processing puts the order in your fulfilment queue, but WooCommerce records it as paid the moment it gets there, and a paid order stops counting against the credit limit."
+msgstr "In Wartestellung ist die ehrliche Antwort: Es wurde nichts bezahlt. In Bearbeitung stellt die Bestellung in Ihre Kommissionierung, aber WooCommerce vermerkt sie in dem Moment als bezahlt — und eine bezahlte Bestellung zählt nicht mehr gegen das Kreditlimit."
+
+#: includes/Gateway/InvoiceGateway.php:159
+msgid "On hold — awaiting payment of the invoice"
+msgstr "In Wartestellung — Rechnung noch offen"
+
+#: includes/Gateway/InvoiceGateway.php:160
+msgid "Processing — ready to fulfil"
+msgstr "In Bearbeitung — bereit zur Kommissionierung"
+
+#: includes/Gateway/InvoiceGateway.php:167
+msgid "The customer's own reference for the purchase. It is shown on the order and in the emails, and orders can be searched by it."
+msgstr "Die eigene Referenz des Kunden für den Einkauf. Sie wird auf der Bestellung und in den E-Mails angezeigt, und Bestellungen lassen sich danach durchsuchen."
+
+#: includes/Gateway/InvoiceGateway.php:171
+msgid "Ask for it"
+msgstr "Danach fragen"
+
+#: includes/Gateway/InvoiceGateway.php:172
+msgid "Require it"
+msgstr "Verpflichtend machen"
+
+#: includes/Gateway/InvoiceGateway.php:173
+msgid "Do not ask for it"
+msgstr "Nicht danach fragen"
+
+#: includes/Gateway/InvoiceGateway.php:177
+msgid "Data"
+msgstr "Daten"
+
+#: includes/Gateway/InvoiceGateway.php:179
+msgid "What happens to the invoice terms you have agreed when this plugin is deleted from the Plugins screen."
+msgstr "Was mit den von Ihnen vereinbarten Rechnungskonditionen geschieht, wenn dieses Plugin auf der Plugin-Seite gelöscht wird."
+
+#: includes/Gateway/InvoiceGateway.php:182
+msgid "On uninstall"
+msgstr "Beim Deinstallieren"
+
+#: includes/Gateway/InvoiceGateway.php:184
+msgid "Delete every organization's invoice terms and credit limits when the plugin is deleted"
+msgstr "Rechnungskonditionen und Kreditlimits aller Organisationen löschen, wenn das Plugin gelöscht wird"
+
+#: includes/Gateway/InvoiceGateway.php:185
+msgid "Off by default. These are agreements with customers, and deleting the plugin should not delete them by accident. Orders and the terms recorded on them are never touched either way."
+msgstr "Standardmäßig aus. Das sind Vereinbarungen mit Kunden, und das Löschen des Plugins sollte sie nicht versehentlich mitlöschen. Bestellungen und die darauf vermerkten Konditionen bleiben in beiden Fällen unberührt."
+
+#: includes/Gateway/InvoiceGateway.php:340
+msgid "That order could not be found."
+msgstr "Diese Bestellung wurde nicht gefunden."
+
+#. translators: %s: the date the invoice falls due.
+#: includes/Gateway/InvoiceGateway.php:396
+#, php-format
+msgid "Awaiting payment of the invoice, due %s."
+msgstr "Warten auf Zahlung der Rechnung, fällig am %s."
+
+#. translators: %s: the date the invoice falls due.
+#: includes/Gateway/InvoiceGateway.php:480
+#, php-format
+msgid "This invoice is due on %s."
+msgstr "Diese Rechnung ist am %s fällig."
+
+#: includes/Gateway/InvoiceGateway.php:499
+msgid "Paying by invoice is not available on this account. Please choose another payment method, or contact the shop."
+msgstr "Kauf auf Rechnung ist für dieses Konto nicht verfügbar. Bitte wählen Sie eine andere Zahlungsart oder wenden Sie sich an den Shop."
+
+#: includes/Gateway/Options.php:71
+msgid "Receive an invoice with your delivery and pay it within the agreed terms."
+msgstr "Sie erhalten mit der Lieferung eine Rechnung und bezahlen sie innerhalb des vereinbarten Zahlungsziels."
+
+#: includes/Gateway/Options.php:72
+msgid "Your invoice follows separately. Please quote the order number when you pay it."
+msgstr "Ihre Rechnung folgt separat. Bitte geben Sie bei der Zahlung die Bestellnummer an."
+
+#. translators: %s: link to the plugin's releases on GitHub.
+#: includes/Updates/Updater.php:196
+#, php-format
+msgid "What changed in each version is recorded with the release it shipped in: %s"
+msgstr "Was sich in welcher Version geändert hat, steht beim jeweiligen Release: %s"
+
+#: includes/Updates/Updater.php:200
+msgid "release notes on GitHub"
+msgstr "Release Notes auf GitHub"
+
+#: woo-invoice-payment-method.php:92
+msgid "WooCommerce Invoice Payment Method is missing its dependencies. Run \"composer install\" in the plugin directory."
+msgstr "WooCommerce Invoice Payment Method fehlen seine Abhängigkeiten. Führen Sie \"composer install\" im Plugin-Verzeichnis aus."
+
+#. translators: %s: minimum supported WooCommerce version.
+#: woo-invoice-payment-method.php:110
+#, php-format
+msgid "WooCommerce Invoice Payment Method requires WooCommerce %s or newer to be installed and active."
+msgstr "WooCommerce Invoice Payment Method benötigt WooCommerce %s oder neuer, installiert und aktiviert."
+
+#. translators: 1: dependency plugin name, 2: minimum supported version, 3: installed version.
+#: woo-invoice-payment-method.php:133
+#, php-format
+msgid "WooCommerce Invoice Payment Method requires %1$s %2$s or newer. Version %3$s is installed."
+msgstr "WooCommerce Invoice Payment Method benötigt %1$s %2$s oder neuer. Installiert ist Version %3$s."
+
+#. translators: %s: dependency plugin name.
+#: woo-invoice-payment-method.php:141
+#, php-format
+msgid "%s is active but is not running — it is waiting on a requirement of its own. Invoice payments stay disabled until it is."
+msgstr "%s ist aktiviert, läuft aber nicht — es wartet auf eine eigene Voraussetzung. Rechnungszahlungen bleiben deaktiviert, bis das behoben ist."
+
+#. translators: %s: dependency plugin name.
+#: woo-invoice-payment-method.php:147
+#, php-format
+msgid "WooCommerce Invoice Payment Method requires %s to be installed and active. Who may pay by invoice is a property of an organization, so there is nothing to offer without it."
+msgstr "WooCommerce Invoice Payment Method benötigt %s, installiert und aktiviert. Wer auf Rechnung kaufen darf, ist eine Eigenschaft der Organisation — ohne dieses Plugin gibt es also nichts anzubieten."
+
+#: woo-invoice-payment-method.php:156
+msgid "Manage plugins"
+msgstr "Plugins verwalten"

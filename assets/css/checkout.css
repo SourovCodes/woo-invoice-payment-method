@@ -1,0 +1,68 @@
+/**
+ * Frontend: the payment method at the checkout, and the invoice block on an order.
+ *
+ * No colour literals outside a var() fallback. Every colour reads a Woodmart custom
+ * property, because the organization plugin this one depends on requires that theme
+ * and Woodmart redefines these per colour scheme — a shop on the dark scheme carries
+ * these few lines with it instead of leaving a patch of wp-admin grey. The literal
+ * inside each var() is Woodmart's own default and applies only if the theme drops the
+ * token.
+ */
+
+.woip-terms,
+.woip-credit {
+	margin: 0 0 8px;
+	color: var(--wd-text-color, #777);
+	font-size: 14px;
+	line-height: 1.6;
+}
+
+.woip-credit {
+	font-weight: 600;
+}
+
+.woip-purchase-order {
+	margin-top: 12px;
+}
+
+.woip-purchase-order .woip-field-description,
+.woip-purchase-order .description {
+	display: block;
+	margin-top: 4px;
+	color: var(--wd-text-color, #777);
+	font-size: 13px;
+}
+
+/* The block checkout draws its own inputs; this only fills in the gap our field sits in. */
+.woip-payment-method .woip-purchase-order label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+.woip-payment-method .woip-purchase-order input[type="text"] {
+	width: 100%;
+}
+
+.woip-invoice-details {
+	margin-top: 30px;
+}
+
+.woip-invoice-details__list {
+	margin: 0;
+	padding: 0;
+	border: 1px solid var(--brdcolor-gray-300, #e9e9e9);
+	list-style: none;
+}
+
+.woip-invoice-details__item {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 10px 15px;
+	border-bottom: 1px solid var(--brdcolor-gray-300, #e9e9e9);
+	color: var(--wd-text-color, #777);
+}
+
+.woip-invoice-details__item:last-child {
+	border-bottom: none;
+}
