@@ -124,8 +124,6 @@ class GatewayTest extends TestCase {
 		$organization = $this->signed_in_buyer( array( 'payment_terms_days' => 14 ) );
 		$order        = $this->pending_order( $organization, 120.00 );
 
-		$_POST[ InvoiceGateway::PURCHASE_ORDER_FIELD ] = 'PO-4711';
-
 		$result = ( new InvoiceGateway() )->process_payment( $order->get_id() );
 
 		$this->assertSame( 'success', $result['result'] );
@@ -135,7 +133,6 @@ class GatewayTest extends TestCase {
 
 		$this->assertTrue( $stored->has_status( 'on-hold' ) );
 		$this->assertNull( $stored->get_date_paid(), 'Nothing has been paid yet.' );
-		$this->assertSame( 'PO-4711', OrderMeta::purchase_order( $stored ) );
 		$this->assertSame( 14, OrderMeta::payment_terms_days( $stored ) );
 		$this->assertSame( gmdate( 'Y-m-d', time() + ( 14 * DAY_IN_SECONDS ) ), OrderMeta::due_date( $stored ) );
 	}
@@ -245,61 +242,6 @@ class GatewayTest extends TestCase {
 	}
 
 	/**
-	 * A required purchase order number is required on both checkouts.
-	 */
-	public function testARequiredPurchaseOrderNumberIsEnforced() {
-		$organization = $this->signed_in_buyer();
-		$order        = $this->pending_order( $organization, 30.00 );
-
-		$this->set_option( 'purchase_order', Options::PO_REQUIRED );
-
-		$this->expectException( \Exception::class );
-		$this->expectExceptionMessageMatches( '/required field/' );
-
-		( new InvoiceGateway() )->process_payment( $order->get_id() );
-	}
-
-	/**
-	 * The purchase order number is sanitised and cut to what the order will hold.
-	 */
-	public function testThePurchaseOrderNumberIsSanitised() {
-		$organization = $this->signed_in_buyer();
-		$order        = $this->pending_order( $organization, 30.00 );
-
-		$_POST[ InvoiceGateway::PURCHASE_ORDER_FIELD ] = '  <script>x</script>PO-1 ' . str_repeat( 'y', 200 );
-
-		( new InvoiceGateway() )->process_payment( $order->get_id() );
-
-		$stored    = wc_get_order( $order->get_id() );
-		$reference = OrderMeta::purchase_order( $stored );
-
-		$this->assertStringNotContainsString( '<', $reference );
-		$this->assertLessThanOrEqual( 100, mb_strlen( $reference ) );
-		$this->assertStringStartsWith( 'PO-1', $reference );
-	}
-
-	/**
-	 * The purchase order field is not asked for when the shop does not want it.
-	 */
-	public function testThePurchaseOrderNumberCanBeTurnedOff() {
-		$organization = $this->signed_in_buyer();
-		$order        = $this->pending_order( $organization, 30.00 );
-
-		$this->set_option( 'purchase_order', Options::PO_HIDDEN );
-
-		$gateway = new InvoiceGateway();
-
-		ob_start();
-		$gateway->payment_fields();
-		$rendered = (string) ob_get_clean();
-
-		$this->assertStringNotContainsString( InvoiceGateway::PURCHASE_ORDER_FIELD, $rendered );
-
-		// And an order still goes through without one.
-		$this->assertSame( 'success', $gateway->process_payment( $order->get_id() )['result'] );
-	}
-
-	/**
 	 * The checkout tells the customer the terms and what credit is left.
 	 */
 	public function testTheCheckoutStatesTheTermsAndTheCreditLeft() {
@@ -316,7 +258,6 @@ class GatewayTest extends TestCase {
 
 		$this->assertStringContainsString( '14 days', $rendered );
 		$this->assertStringContainsString( 'Credit still available', $rendered );
-		$this->assertStringContainsString( InvoiceGateway::PURCHASE_ORDER_FIELD, $rendered );
 	}
 
 	/**

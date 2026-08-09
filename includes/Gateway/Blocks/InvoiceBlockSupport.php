@@ -92,26 +92,15 @@ final class InvoiceBlockSupport extends AbstractPaymentMethodType {
 		$available       = 0 === $organization_id ? null : Credit::available( $organization_id );
 
 		return array(
-			'title'         => (string) $this->get_setting( 'title' ),
-			'description'   => (string) $this->get_setting( 'description' ),
-			'terms'         => 0 === $organization_id ? '' : Eligibility::terms_summary( $organization_id ),
-			'creditNotice'  => null === $available ? '' : sprintf(
+			'title'        => (string) $this->get_setting( 'title' ),
+			'description'  => (string) $this->get_setting( 'description' ),
+			'terms'        => 0 === $organization_id ? '' : Eligibility::terms_summary( $organization_id ),
+			'creditNotice' => null === $available ? '' : sprintf(
 				/* translators: %s: formatted amount of credit still available. */
 				__( 'Credit still available: %s.', 'woo-invoice-payment-method' ),
 				Credit::format( max( 0, $available ) )
 			),
-			'purchaseOrder' => array(
-				'mode'        => Options::purchase_order_mode(),
-				'field'       => InvoiceGateway::PURCHASE_ORDER_FIELD,
-				'label'       => __( 'Purchase order number', 'woo-invoice-payment-method' ),
-				'description' => __( 'Your own reference for this purchase. It is printed on the invoice.', 'woo-invoice-payment-method' ),
-				'error'       => sprintf(
-					/* translators: %s: the purchase order field label. */
-					__( '%s is a required field.', 'woo-invoice-payment-method' ),
-					__( 'Purchase order number', 'woo-invoice-payment-method' )
-				),
-			),
-			'supports'      => $this->get_supported_features(),
+			'supports'     => $this->get_supported_features(),
 		);
 	}
 

@@ -21,28 +21,6 @@
 	font-weight: 600;
 }
 
-.woip-purchase-order {
-	margin-top: 12px;
-}
-
-.woip-purchase-order .woip-field-description,
-.woip-purchase-order .description {
-	display: block;
-	margin-top: 4px;
-	color: var(--wd-text-color, #777);
-	font-size: 13px;
-}
-
-/* The block checkout draws its own inputs; this only fills in the gap our field sits in. */
-.woip-payment-method .woip-purchase-order label {
-	display: block;
-	margin-bottom: 4px;
-}
-
-.woip-payment-method .woip-purchase-order input[type="text"] {
-	width: 100%;
-}
-
 .woip-invoice-details {
 	margin-top: 30px;
 }

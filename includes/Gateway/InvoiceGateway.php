@@ -42,11 +42,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 	const ID = 'woip_invoice';
 
 	/**
-	 * Field the purchase order reference is submitted in, on both checkouts.
-	 */
-	const PURCHASE_ORDER_FIELD = 'woip_purchase_order';
-
-	/**
 	 * What the customer is told on the order received page and in the emails.
 	 *
 	 * Declared rather than assigned into: WC_Payment_Gateway does not carry this
@@ -160,19 +155,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 					'processing' => __( 'Processing — ready to fulfil', 'woo-invoice-payment-method' ),
 				),
 			),
-			'purchase_order'           => array(
-				'title'       => __( 'Purchase order number', 'woo-invoice-payment-method' ),
-				'type'        => 'select',
-				'class'       => 'wc-enhanced-select',
-				'description' => __( 'The customer\'s own reference for the purchase. It is shown on the order and in the emails, and orders can be searched by it.', 'woo-invoice-payment-method' ),
-				'default'     => $defaults['purchase_order'],
-				'desc_tip'    => true,
-				'options'     => array(
-					Options::PO_OPTIONAL => __( 'Ask for it', 'woo-invoice-payment-method' ),
-					Options::PO_REQUIRED => __( 'Require it', 'woo-invoice-payment-method' ),
-					Options::PO_HIDDEN   => __( 'Do not ask for it', 'woo-invoice-payment-method' ),
-				),
-			),
 			'woip_data'                => array(
 				'title'       => __( 'Data', 'woo-invoice-payment-method' ),
 				'type'        => 'title',
@@ -238,46 +220,14 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 				)
 			);
 		}
-
-		$this->purchase_order_field();
-	}
-
-	/**
-	 * Render the purchase order field, when the shop asks for one.
-	 *
-	 * @return void
-	 */
-	private function purchase_order_field() {
-		$mode = Options::purchase_order_mode();
-
-		if ( Options::PO_HIDDEN === $mode ) {
-			return;
-		}
-
-		echo '<div class="woip-purchase-order">';
-
-		woocommerce_form_field(
-			self::PURCHASE_ORDER_FIELD,
-			array(
-				'type'              => 'text',
-				'label'             => __( 'Purchase order number', 'woo-invoice-payment-method' ),
-				'required'          => Options::PO_REQUIRED === $mode,
-				'class'             => array( 'form-row-wide' ),
-				'description'       => __( 'Your own reference for this purchase. It is printed on the invoice.', 'woo-invoice-payment-method' ),
-				'custom_attributes' => array( 'maxlength' => '100' ),
-			),
-			$this->submitted_purchase_order()
-		);
-
-		echo '</div>';
 	}
 
 	/**
 	 * Validate the classic checkout's fields.
 	 *
 	 * Nothing here is the enforcement — process_payment() is, because the block
-	 * checkout never calls this method. What this buys is the error appearing beside
-	 * the field the customer can fix rather than after the order has been built.
+	 * checkout never calls this method. What this buys is the customer hearing about
+	 * the problem at the checkout rather than after the order has been built.
 	 *
 	 * @return bool True when the submission may proceed.
 	 */
@@ -289,19 +239,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 			wc_add_notice( $this->unavailable_message(), 'error' );
 
 			return false;
-		}
-
-		if ( Options::PO_REQUIRED === Options::purchase_order_mode() && '' === $this->submitted_purchase_order() ) {
-			wc_add_notice(
-				sprintf(
-					/* translators: %s: the purchase order field label. */
-					__( '%s is a required field.', 'woo-invoice-payment-method' ),
-					__( 'Purchase order number', 'woo-invoice-payment-method' )
-				),
-				'error'
-			);
-
-			$valid = false;
 		}
 
 		$cart = WC()->cart;
@@ -346,20 +283,6 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 			throw new \Exception( esc_html( $this->unavailable_message() ) );
 		}
 
-		$purchase_order = $this->submitted_purchase_order();
-
-		if ( Options::PO_REQUIRED === Options::purchase_order_mode() && '' === $purchase_order ) {
-			throw new \Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: the purchase order field label. */
-						__( '%s is a required field.', 'woo-invoice-payment-method' ),
-						__( 'Purchase order number', 'woo-invoice-payment-method' )
-					)
-				)
-			);
-		}
-
 		/*
 		 * The order itself is left out of the outstanding sum. On the order-pay screen
 		 * it already exists and is already unpaid, so counting it would make every such
@@ -374,7 +297,7 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 		$terms_days = Eligibility::payment_terms_days( $organization_id );
 		$due_date   = Eligibility::due_date( $organization_id );
 
-		OrderMeta::stamp( $order, $terms_days, $due_date, $purchase_order );
+		OrderMeta::stamp( $order, $terms_days, $due_date );
 		$order->set_payment_method( $this );
 		$order->save();
 
@@ -497,29 +420,5 @@ class InvoiceGateway extends \WC_Payment_Gateway {
 	 */
 	private function unavailable_message() {
 		return __( 'Paying by invoice is not available on this account. Please choose another payment method, or contact the shop.', 'woo-invoice-payment-method' );
-	}
-
-	/**
-	 * The purchase order reference as submitted.
-	 *
-	 * Read from `$_POST` for both checkouts. The classic checkout posts the field
-	 * itself; the Store API copies the block checkout's payment data into `$_POST`
-	 * before it calls a gateway, which is what lets one gateway serve both. The nonce
-	 * is not this method's to check — WooCommerce has already verified the checkout
-	 * nonce or the REST nonce by the time either surface reaches a gateway, and
-	 * checking a nonce that was never posted here would reject every block checkout.
-	 *
-	 * @return string Sanitised reference, trimmed to what the column holds.
-	 */
-	private function submitted_purchase_order() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by WC_Checkout::process_checkout() or by the Store API before any gateway is called; see the docblock.
-		if ( ! isset( $_POST[ self::PURCHASE_ORDER_FIELD ] ) ) {
-			return '';
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- As above.
-		$value = sanitize_text_field( wp_unslash( $_POST[ self::PURCHASE_ORDER_FIELD ] ) );
-
-		return trim( mb_substr( $value, 0, 100 ) );
 	}
 }

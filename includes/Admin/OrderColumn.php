@@ -12,17 +12,11 @@ use WooInvoicePayment\Checkout\OrderMeta;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Adds the invoice due date to the orders list, and makes orders findable by the
- * customer's own purchase order number.
+ * Adds the invoice due date to the orders list.
  *
  * The hooks are the High-Performance Order Storage ones. HPOS is guaranteed here — the
  * organization plugin this one depends on refuses to boot without it — so there is no
  * legacy `manage_shop_order_posts_columns` path and no screen-ID branch.
- *
- * **The search key is the reason a purchase order number is worth collecting at all.**
- * A reference the customer quotes in an email is only useful if somebody at the shop
- * can type it into the orders screen and find the order; WooCommerce searches a fixed
- * list of meta keys and knows nothing about ours until it is told.
  */
 class OrderColumn {
 
@@ -34,7 +28,6 @@ class OrderColumn {
 	public function register() {
 		add_filter( 'woocommerce_shop_order_list_table_columns', array( $this, 'add_column' ) );
 		add_action( 'woocommerce_shop_order_list_table_custom_column', array( $this, 'render_column' ), 10, 2 );
-		add_filter( 'woocommerce_order_table_search_query_meta_keys', array( $this, 'add_search_key' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 	}
 
@@ -113,19 +106,6 @@ class OrderColumn {
 		}
 
 		echo esc_html( $due );
-	}
-
-	/**
-	 * Let the orders screen search on the purchase order number.
-	 *
-	 * @param array $keys Meta keys WooCommerce already searches.
-	 * @return array Keys, with ours added.
-	 */
-	public function add_search_key( $keys ) {
-		$keys   = (array) $keys;
-		$keys[] = OrderMeta::PURCHASE_ORDER;
-
-		return array_values( array_unique( $keys ) );
 	}
 
 	/**

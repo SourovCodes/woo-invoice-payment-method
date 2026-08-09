@@ -46,13 +46,7 @@ class OrderDetails {
 			return array();
 		}
 
-		$rows           = array();
-		$purchase_order = OrderMeta::purchase_order( $order );
-
-		if ( '' !== $purchase_order ) {
-			$rows[ __( 'Purchase order number', 'woo-invoice-payment-method' ) ] = $purchase_order;
-		}
-
+		$rows = array();
 		$days = OrderMeta::payment_terms_days( $order );
 
 		if ( 0 === $days ) {

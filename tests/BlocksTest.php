@@ -73,7 +73,7 @@ class BlocksTest extends TestCase {
 	}
 
 	/**
-	 * The browser is told the terms, the credit left and which field to post back.
+	 * The browser is told the same terms and the same credit the server has.
 	 */
 	public function testTheBrowserIsGivenTheSameAnswersTheServerHas() {
 		$this->enable_gateway();
@@ -99,8 +99,7 @@ class BlocksTest extends TestCase {
 
 		$this->assertStringContainsString( '14 days', $data['terms'] );
 		$this->assertStringContainsString( '600', $data['creditNotice'] );
-		$this->assertSame( InvoiceGateway::PURCHASE_ORDER_FIELD, $data['purchaseOrder']['field'] );
-		$this->assertSame( Options::purchase_order_mode(), $data['purchaseOrder']['mode'] );
+		$this->assertSame( Options::all()['title'], $data['title'] );
 	}
 
 	/**

@@ -15,60 +15,23 @@
 
 	var settings = wc.wcSettings.getSetting( 'woip_invoice_data', {} );
 	var el = wp.element.createElement;
-	var useState = wp.element.useState;
-	var useEffect = wp.element.useEffect;
 	var decodeEntities = wp.htmlEntities ? wp.htmlEntities.decodeEntities : function ( value ) {
 		return value;
 	};
 
 	var title = decodeEntities( settings.title || '' );
-	var purchaseOrder = settings.purchaseOrder || {};
 
 	/**
 	 * What the customer sees once they have selected the method.
 	 *
-	 * @param {Object} props Payment method props supplied by the block checkout.
+	 * The method collects nothing: everything below is a statement of what the server
+	 * has already decided, so there is no onPaymentSetup handler and no payment data to
+	 * send back. The order is still refused by process_payment() if any of it has
+	 * changed by the time it is submitted.
+	 *
 	 * @return {Object} Element.
 	 */
-	function Content( props ) {
-		var eventRegistration = props.eventRegistration || {};
-		var emitResponse = props.emitResponse || {};
-		var reference = useState( '' );
-		var value = reference[ 0 ];
-		var setValue = reference[ 1 ];
-
-		useEffect(
-			function () {
-				if ( ! eventRegistration.onPaymentSetup ) {
-					return;
-				}
-
-				/*
-				 * Whatever is returned here as paymentMethodData reaches the gateway as
-				 * $_POST, which is what lets one process_payment() serve both checkouts.
-				 */
-				return eventRegistration.onPaymentSetup( function () {
-					var trimmed = value.trim();
-
-					if ( 'required' === purchaseOrder.mode && '' === trimmed ) {
-						return {
-							type: emitResponse.responseTypes.ERROR,
-							message: purchaseOrder.error || '',
-						};
-					}
-
-					var data = {};
-					data[ purchaseOrder.field ] = trimmed;
-
-					return {
-						type: emitResponse.responseTypes.SUCCESS,
-						meta: { paymentMethodData: data },
-					};
-				} );
-			},
-			[ eventRegistration, emitResponse, value ]
-		);
-
+	function Content() {
 		var children = [];
 
 		if ( settings.description ) {
@@ -86,36 +49,6 @@
 		if ( settings.creditNotice ) {
 			children.push(
 				el( 'p', { key: 'credit', className: 'woip-credit' }, decodeEntities( settings.creditNotice ) )
-			);
-		}
-
-		if ( 'hidden' !== purchaseOrder.mode ) {
-			children.push(
-				el(
-					'div',
-					{ key: 'po', className: 'woip-purchase-order wc-block-components-text-input' },
-					el(
-						'label',
-						{ htmlFor: 'woip-purchase-order-field' },
-						decodeEntities( purchaseOrder.label || '' ) +
-							( 'required' === purchaseOrder.mode ? ' *' : '' )
-					),
-					el( 'input', {
-						id: 'woip-purchase-order-field',
-						type: 'text',
-						maxLength: 100,
-						value: value,
-						required: 'required' === purchaseOrder.mode,
-						onChange: function ( event ) {
-							setValue( event.target.value );
-						},
-					} ),
-					el(
-						'span',
-						{ className: 'woip-field-description' },
-						decodeEntities( purchaseOrder.description || '' )
-					)
-				)
 			);
 		}
 

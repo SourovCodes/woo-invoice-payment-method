@@ -29,11 +29,6 @@ defined( 'ABSPATH' ) || exit;
 final class OrderMeta {
 
 	/**
-	 * The customer's own reference for the purchase.
-	 */
-	const PURCHASE_ORDER = '_woip_purchase_order';
-
-	/**
 	 * How many days the invoice was payable within, as agreed at checkout.
 	 */
 	const PAYMENT_TERMS_DAYS = '_woip_payment_terms_days';
@@ -46,42 +41,27 @@ final class OrderMeta {
 	/**
 	 * Record the invoice terms on an order.
 	 *
-	 * @param \WC_Order $order          The order.
-	 * @param int       $terms_days     Days the invoice is payable within.
-	 * @param string    $due_date       Due date in Y-m-d.
-	 * @param string    $purchase_order Customer's purchase order reference.
+	 * @param \WC_Order $order      The order.
+	 * @param int       $terms_days Days the invoice is payable within.
+	 * @param string    $due_date   Due date in Y-m-d.
 	 * @return void
 	 */
-	public static function stamp( \WC_Order $order, $terms_days, $due_date, $purchase_order = '' ) {
+	public static function stamp( \WC_Order $order, $terms_days, $due_date ) {
 		$order->update_meta_data( self::PAYMENT_TERMS_DAYS, absint( $terms_days ) );
 		$order->update_meta_data( self::DUE_DATE, (string) $due_date );
-
-		if ( '' !== $purchase_order ) {
-			$order->update_meta_data( self::PURCHASE_ORDER, (string) $purchase_order );
-		}
 	}
 
 	/**
 	 * Whether an order was placed on invoice.
 	 *
 	 * The payment method is the authority, not the presence of our meta: an order can
-	 * carry a purchase order reference and have been paid for by card.
+	 * carry a due date from a method it was later moved off.
 	 *
 	 * @param \WC_Order $order The order.
 	 * @return bool True when this gateway took the order.
 	 */
 	public static function is_invoice_order( \WC_Order $order ) {
 		return InvoiceGateway::ID === $order->get_payment_method();
-	}
-
-	/**
-	 * The customer's purchase order reference.
-	 *
-	 * @param \WC_Order $order The order.
-	 * @return string Reference, or an empty string.
-	 */
-	public static function purchase_order( \WC_Order $order ) {
-		return (string) $order->get_meta( self::PURCHASE_ORDER );
 	}
 
 	/**

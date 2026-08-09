@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-09T05:51:40+00:00\n"
+"POT-Creation-Date: 2026-08-09T06:19:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de_DE\n"
 "X-Generator: WP-CLI 2.12.0\n"
@@ -36,20 +36,20 @@ msgstr "Fügt der WooCommerce-Kasse die Zahlungsart Kauf auf Rechnung hinzu — 
 msgid "Sourov Biswas"
 msgstr ""
 
-#: includes/Admin/OrderColumn.php:54
-#: includes/Admin/OrderColumn.php:59
-#: includes/Checkout/OrderDetails.php:71
+#: includes/Admin/OrderColumn.php:47
+#: includes/Admin/OrderColumn.php:52
+#: includes/Checkout/OrderDetails.php:65
 msgid "Invoice due"
 msgstr "Rechnung fällig"
 
 #. translators: %s: the date the invoice fell due.
-#: includes/Admin/OrderColumn.php:100
-#: includes/Checkout/OrderDetails.php:74
+#: includes/Admin/OrderColumn.php:93
+#: includes/Checkout/OrderDetails.php:68
 #, php-format
 msgid "%s — overdue"
 msgstr "%s — überfällig"
 
-#: includes/Admin/OrderColumn.php:110
+#: includes/Admin/OrderColumn.php:103
 msgid "Paid"
 msgstr "Bezahlt"
 
@@ -92,8 +92,8 @@ msgstr "Rechnungskauf"
 
 #: includes/Admin/OrganizationTerms.php:215
 #: includes/Admin/OrganizationTerms.php:561
-#: includes/Checkout/OrderDetails.php:59
-#: includes/Checkout/OrderDetails.php:61
+#: includes/Checkout/OrderDetails.php:53
+#: includes/Checkout/OrderDetails.php:55
 msgid "Payment terms"
 msgstr "Zahlungsziel"
 
@@ -170,7 +170,7 @@ msgstr "Standard (%d Tage)"
 
 #. translators: %d: number of days the invoice is payable within.
 #: includes/Admin/OrganizationTerms.php:379
-#: includes/Checkout/OrderDetails.php:63
+#: includes/Checkout/OrderDetails.php:57
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -258,23 +258,13 @@ msgid "For the shop only. The customer never sees it."
 msgstr "Nur für den Shop. Der Kunde sieht sie nie."
 
 #: includes/Checkout/OrderDetails.php:53
-#: includes/Gateway/Blocks/InvoiceBlockSupport.php:106
-#: includes/Gateway/Blocks/InvoiceBlockSupport.php:111
-#: includes/Gateway/InvoiceGateway.php:164
-#: includes/Gateway/InvoiceGateway.php:263
-#: includes/Gateway/InvoiceGateway.php:299
-#: includes/Gateway/InvoiceGateway.php:357
-msgid "Purchase order number"
-msgstr "Bestellreferenz"
-
-#: includes/Checkout/OrderDetails.php:59
 msgid "Payable on receipt"
 msgstr "Zahlbar sofort nach Erhalt"
 
-#: includes/Checkout/OrderDetails.php:101
-#: includes/Checkout/OrderDetails.php:140
-#: includes/Checkout/OrderDetails.php:151
-#: includes/Checkout/OrderDetails.php:179
+#: includes/Checkout/OrderDetails.php:95
+#: includes/Checkout/OrderDetails.php:134
+#: includes/Checkout/OrderDetails.php:145
+#: includes/Checkout/OrderDetails.php:173
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -316,166 +306,137 @@ msgstr[1] "Zahlbar innerhalb von %d Tagen ab Rechnungsdatum."
 
 #. translators: %s: formatted amount of credit still available.
 #: includes/Gateway/Blocks/InvoiceBlockSupport.php:100
-#: includes/Gateway/InvoiceGateway.php:235
+#: includes/Gateway/InvoiceGateway.php:217
 #, php-format
 msgid "Credit still available: %s."
 msgstr "Noch verfügbarer Kreditrahmen: %s."
 
-#: includes/Gateway/Blocks/InvoiceBlockSupport.php:107
-#: includes/Gateway/InvoiceGateway.php:266
-msgid "Your own reference for this purchase. It is printed on the invoice."
-msgstr "Deine eigene Referenz für diesen Einkauf. Sie wird auf der Rechnung ausgewiesen."
-
-#. translators: %s: the purchase order field label.
-#: includes/Gateway/Blocks/InvoiceBlockSupport.php:110
-#: includes/Gateway/InvoiceGateway.php:298
-#: includes/Gateway/InvoiceGateway.php:356
-#, php-format
-msgid "%s is a required field."
-msgstr "%s ist ein Pflichtfeld."
-
-#: includes/Gateway/InvoiceGateway.php:66
-#: includes/Gateway/Options.php:70
+#: includes/Gateway/InvoiceGateway.php:61
+#: includes/Gateway/Options.php:55
 msgid "Pay by invoice"
 msgstr "Kauf auf Rechnung"
 
-#: includes/Gateway/InvoiceGateway.php:67
+#: includes/Gateway/InvoiceGateway.php:62
 msgid "Lets an organization complete the checkout without paying, and be invoiced on the terms you agreed with it. Offered only to the organizations you allow it to, and only up to the credit limit you set them."
 msgstr "Lässt eine Organisation die Kasse abschließen, ohne zu bezahlen, und stellt ihr zu dem Zahlungsziel in Rechnung, das du mit ihr vereinbart hast. Wird nur den Organisationen angeboten, denen du es erlaubst, und nur bis zu dem Kreditlimit, das du ihnen setzt."
 
-#: includes/Gateway/InvoiceGateway.php:101
+#: includes/Gateway/InvoiceGateway.php:96
 msgid "Enable/Disable"
 msgstr "Aktivieren/Deaktivieren"
 
-#: includes/Gateway/InvoiceGateway.php:103
+#: includes/Gateway/InvoiceGateway.php:98
 msgid "Let approved organizations pay by invoice"
 msgstr "Freigegebenen Organisationen den Kauf auf Rechnung erlauben"
 
-#: includes/Gateway/InvoiceGateway.php:107
+#: includes/Gateway/InvoiceGateway.php:102
 msgid "Title"
 msgstr "Titel"
 
-#: includes/Gateway/InvoiceGateway.php:109
+#: includes/Gateway/InvoiceGateway.php:104
 msgid "What the payment method is called at the checkout."
 msgstr "Wie die Zahlungsart an der Kasse heißt."
 
-#: includes/Gateway/InvoiceGateway.php:114
+#: includes/Gateway/InvoiceGateway.php:109
 msgid "Description"
 msgstr "Beschreibung"
 
-#: includes/Gateway/InvoiceGateway.php:116
+#: includes/Gateway/InvoiceGateway.php:111
 msgid "Shown under the payment method when the customer selects it. The agreed terms are added to it automatically."
 msgstr "Wird unter der Zahlungsart angezeigt, wenn der Kunde sie auswählt. Das vereinbarte Zahlungsziel wird automatisch ergänzt."
 
-#: includes/Gateway/InvoiceGateway.php:121
+#: includes/Gateway/InvoiceGateway.php:116
 msgid "Instructions"
 msgstr "Hinweise"
 
-#: includes/Gateway/InvoiceGateway.php:123
+#: includes/Gateway/InvoiceGateway.php:118
 msgid "Shown on the order received page and in the order emails."
 msgstr "Wird auf der Bestellbestätigungsseite und in den Bestell-E-Mails angezeigt."
 
-#: includes/Gateway/InvoiceGateway.php:128
+#: includes/Gateway/InvoiceGateway.php:123
 msgid "Offer it to"
 msgstr "Anbieten an"
 
-#: includes/Gateway/InvoiceGateway.php:131
+#: includes/Gateway/InvoiceGateway.php:126
 msgid "Either way, an organization you have refused invoicing never sees it, and one you have allowed it always does."
 msgstr "In beiden Fällen gilt: Eine Organisation, der du den Rechnungskauf verweigert hast, sieht ihn nie, und eine, der du ihn erlaubt hast, sieht ihn immer."
 
-#: includes/Gateway/InvoiceGateway.php:135
+#: includes/Gateway/InvoiceGateway.php:130
 msgid "Only the organizations I allow one by one"
 msgstr "Nur die Organisationen, die ich einzeln freigebe"
 
-#: includes/Gateway/InvoiceGateway.php:136
+#: includes/Gateway/InvoiceGateway.php:131
 msgid "Every organization that can place orders"
 msgstr "Jede Organisation, die bestellen darf"
 
-#: includes/Gateway/InvoiceGateway.php:140
+#: includes/Gateway/InvoiceGateway.php:135
 msgid "Default payment terms"
 msgstr "Standard-Zahlungsziel"
 
-#: includes/Gateway/InvoiceGateway.php:142
+#: includes/Gateway/InvoiceGateway.php:137
 msgid "Days an invoice is payable within, for an organization you have not agreed different terms with. Zero means payable on receipt."
 msgstr "Tage, innerhalb derer eine Rechnung zahlbar ist — für Organisationen, mit denen du kein abweichendes Zahlungsziel vereinbart hast. Null bedeutet zahlbar sofort nach Erhalt."
 
-#: includes/Gateway/InvoiceGateway.php:152
+#: includes/Gateway/InvoiceGateway.php:147
 msgid "Order status"
 msgstr "Bestellstatus"
 
-#: includes/Gateway/InvoiceGateway.php:155
+#: includes/Gateway/InvoiceGateway.php:150
 msgid "On hold is the honest answer: nothing has been paid. Processing puts the order in your fulfilment queue, but WooCommerce records it as paid the moment it gets there, and a paid order stops counting against the credit limit."
 msgstr "In Wartestellung ist die ehrliche Antwort: Es wurde nichts bezahlt. In Bearbeitung stellt die Bestellung in deine Kommissionierung, aber WooCommerce vermerkt sie in dem Moment als bezahlt — und eine bezahlte Bestellung zählt nicht mehr gegen das Kreditlimit."
 
-#: includes/Gateway/InvoiceGateway.php:159
+#: includes/Gateway/InvoiceGateway.php:154
 msgid "On hold — awaiting payment of the invoice"
 msgstr "In Wartestellung — Rechnung noch offen"
 
-#: includes/Gateway/InvoiceGateway.php:160
+#: includes/Gateway/InvoiceGateway.php:155
 msgid "Processing — ready to fulfil"
 msgstr "In Bearbeitung — bereit zur Kommissionierung"
 
-#: includes/Gateway/InvoiceGateway.php:167
-msgid "The customer's own reference for the purchase. It is shown on the order and in the emails, and orders can be searched by it."
-msgstr "Die eigene Referenz des Kunden für den Einkauf. Sie wird auf der Bestellung und in den E-Mails angezeigt, und Bestellungen lassen sich danach durchsuchen."
-
-#: includes/Gateway/InvoiceGateway.php:171
-msgid "Ask for it"
-msgstr "Danach fragen"
-
-#: includes/Gateway/InvoiceGateway.php:172
-msgid "Require it"
-msgstr "Verpflichtend machen"
-
-#: includes/Gateway/InvoiceGateway.php:173
-msgid "Do not ask for it"
-msgstr "Nicht danach fragen"
-
-#: includes/Gateway/InvoiceGateway.php:177
+#: includes/Gateway/InvoiceGateway.php:159
 msgid "Data"
 msgstr "Daten"
 
-#: includes/Gateway/InvoiceGateway.php:179
+#: includes/Gateway/InvoiceGateway.php:161
 msgid "What happens to the invoice terms you have agreed when this plugin is deleted from the Plugins screen."
 msgstr "Was mit den von dir vereinbarten Rechnungskonditionen geschieht, wenn dieses Plugin auf der Plugin-Seite gelöscht wird."
 
-#: includes/Gateway/InvoiceGateway.php:182
+#: includes/Gateway/InvoiceGateway.php:164
 msgid "On uninstall"
 msgstr "Beim Deinstallieren"
 
-#: includes/Gateway/InvoiceGateway.php:184
+#: includes/Gateway/InvoiceGateway.php:166
 msgid "Delete every organization's invoice terms and credit limits when the plugin is deleted"
 msgstr "Rechnungskonditionen und Kreditlimits aller Organisationen löschen, wenn das Plugin gelöscht wird"
 
-#: includes/Gateway/InvoiceGateway.php:185
+#: includes/Gateway/InvoiceGateway.php:167
 msgid "Off by default. These are agreements with customers, and deleting the plugin should not delete them by accident. Orders and the terms recorded on them are never touched either way."
 msgstr "Standardmäßig aus. Das sind Vereinbarungen mit Kunden, und das Löschen des Plugins sollte sie nicht versehentlich mitlöschen. Bestellungen und die darauf vermerkten Konditionen bleiben in beiden Fällen unberührt."
 
-#: includes/Gateway/InvoiceGateway.php:340
+#: includes/Gateway/InvoiceGateway.php:277
 msgid "That order could not be found."
 msgstr "Diese Bestellung wurde nicht gefunden."
 
 #. translators: %s: the date the invoice falls due.
-#: includes/Gateway/InvoiceGateway.php:396
+#: includes/Gateway/InvoiceGateway.php:319
 #, php-format
 msgid "Awaiting payment of the invoice, due %s."
 msgstr "Warten auf Zahlung der Rechnung, fällig am %s."
 
 #. translators: %s: the date the invoice falls due.
-#: includes/Gateway/InvoiceGateway.php:480
+#: includes/Gateway/InvoiceGateway.php:403
 #, php-format
 msgid "This invoice is due on %s."
 msgstr "Diese Rechnung ist am %s fällig."
 
-#: includes/Gateway/InvoiceGateway.php:499
+#: includes/Gateway/InvoiceGateway.php:422
 msgid "Paying by invoice is not available on this account. Please choose another payment method, or contact the shop."
 msgstr "Kauf auf Rechnung ist für dieses Konto nicht verfügbar. Bitte wähle eine andere Zahlungsart oder wende dich an den Shop."
 
-#: includes/Gateway/Options.php:71
+#: includes/Gateway/Options.php:56
 msgid "Receive an invoice with your delivery and pay it within the agreed terms."
 msgstr "Du erhältst mit der Lieferung eine Rechnung und bezahlst sie innerhalb des vereinbarten Zahlungsziels."
 
-#: includes/Gateway/Options.php:72
+#: includes/Gateway/Options.php:57
 msgid "Your invoice follows separately. Please quote the order number when you pay it."
 msgstr "Deine Rechnung folgt separat. Bitte gib bei der Zahlung die Bestellnummer an."
 

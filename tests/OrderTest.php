@@ -31,7 +31,7 @@ class OrderTest extends TestCase {
 		$organization = $this->make_organization();
 		$order        = $this->make_order( $organization, 100.00, $status, $method );
 
-		OrderMeta::stamp( $order, $days, $due, 'PO-9' );
+		OrderMeta::stamp( $order, $days, $due );
 		$order->save();
 
 		return wc_get_order( $order->get_id() );
@@ -40,7 +40,7 @@ class OrderTest extends TestCase {
 	/**
 	 * The payment method decides whether an order is an invoice, not our meta.
 	 *
-	 * An order can carry a purchase order reference and have been paid for by card.
+	 * An order can carry a due date and have been paid for by card.
 	 */
 	public function testThePaymentMethodDecidesWhatIsAnInvoice() {
 		$invoice = $this->invoice_order( '2026-12-01' );
@@ -96,7 +96,6 @@ class OrderTest extends TestCase {
 		$order = $this->invoice_order( '2026-12-01', 30 );
 		$rows  = OrderDetails::rows( $order );
 
-		$this->assertContains( 'PO-9', $rows );
 		$this->assertContains( '30 days', $rows );
 		$this->assertNotEmpty( $rows[ __( 'Invoice due', 'woo-invoice-payment-method' ) ] );
 	}
@@ -147,7 +146,7 @@ class OrderTest extends TestCase {
 		$details->render_email_details( $order, false, true );
 		$plain = (string) ob_get_clean();
 
-		$this->assertStringContainsString( 'PO-9', $plain );
+		$this->assertStringContainsString( 'Payment terms', $plain );
 		$this->assertStringNotContainsString( '<', $plain );
 	}
 
@@ -162,20 +161,6 @@ class OrderTest extends TestCase {
 		$details->render_order_details( $order );
 
 		$this->assertSame( '', trim( (string) ob_get_clean() ) );
-	}
-
-	/**
-	 * The orders screen can be searched by the customer's purchase order number.
-	 *
-	 * A reference the customer quotes in an email is only useful if somebody at the
-	 * shop can type it into the orders screen and find the order.
-	 */
-	public function testOrdersAreSearchableByPurchaseOrderNumber() {
-		$keys = ( new OrderColumn() )->add_search_key( array( '_billing_address_index' ) );
-
-		$this->assertContains( OrderMeta::PURCHASE_ORDER, $keys );
-		$this->assertContains( '_billing_address_index', $keys, 'WooCommerce\'s own keys were dropped.' );
-		$this->assertSame( array_unique( $keys ), $keys );
 	}
 
 	/**

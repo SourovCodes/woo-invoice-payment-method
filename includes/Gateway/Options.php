@@ -45,21 +45,6 @@ final class Options {
 	const AVAILABILITY_SELECTED = 'selected';
 
 	/**
-	 * The purchase order field is not shown.
-	 */
-	const PO_HIDDEN = 'hidden';
-
-	/**
-	 * The purchase order field is shown and may be left blank.
-	 */
-	const PO_OPTIONAL = 'optional';
-
-	/**
-	 * The purchase order field is shown and must be filled in.
-	 */
-	const PO_REQUIRED = 'required';
-
-	/**
 	 * The default settings.
 	 *
 	 * @return array Map of setting name to default value.
@@ -73,7 +58,6 @@ final class Options {
 			'availability'             => self::AVAILABILITY_SELECTED,
 			'payment_terms_days'       => 30,
 			'order_status'             => 'on-hold',
-			'purchase_order'           => self::PO_OPTIONAL,
 			'remove_data_on_uninstall' => 'no',
 		);
 	}
@@ -132,18 +116,6 @@ final class Options {
 	 */
 	public static function payment_terms_days() {
 		return absint( self::get( 'payment_terms_days' ) );
-	}
-
-	/**
-	 * Whether and how the purchase order number is asked for.
-	 *
-	 * @return string One of the PO_* constants.
-	 */
-	public static function purchase_order_mode() {
-		$value = (string) self::get( 'purchase_order' );
-		$modes = array( self::PO_HIDDEN, self::PO_OPTIONAL, self::PO_REQUIRED );
-
-		return in_array( $value, $modes, true ) ? $value : self::PO_OPTIONAL;
 	}
 
 	/**

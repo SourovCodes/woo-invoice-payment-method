@@ -129,7 +129,9 @@ rather than receiving one — `AdminTest` is where the handler is asserted to ch
 ## Security — not negotiable
 
 - **Sanitise on input**: `sanitize_text_field()`, `absint()`, `wc_format_decimal()`, `wp_unslash()`
-  on every `$_POST` / `$_GET` value. Never read `$_REQUEST` outside a nonce check.
+  on every `$_POST` / `$_GET` value. Never read `$_REQUEST` outside a nonce check. The checkout
+  collects nothing from the customer — the method states terms and takes the order — so every input
+  the plugin has is on the admin screen.
 - **Escape on output**: `esc_html()`, `esc_attr()`, `esc_url()`, `wp_kses_post()` — at the point of
   output, not at assignment. That includes exception messages, which WooCommerce prints.
 - **Authorise every state change**: `check_admin_referer()` *and* `current_user_can()`. A nonce
@@ -137,9 +139,8 @@ rather than receiving one — `AdminTest` is where the handler is asserted to ch
 - **`process_payment()` is the enforcement point, and it is the only one.** `validate_fields()`
   exists so the customer hears about a problem beside the field they can fix — the block checkout
   never calls it. Anything enforced only there is not enforced at all for most shops.
-- **Nothing the browser sends is trusted.** The block integration hands the browser the terms, the
-  credit remaining and the field name; every one of those is re-derived on the server when the
-  order is placed.
+- **Nothing the browser sends is trusted.** The block integration hands the browser the terms and
+  the credit remaining; both are re-derived on the server when the order is placed.
 - **Prepare every query**: `$wpdb->prepare()` for anything with a variable in it. All SQL lives in
   `includes/Data/TermsRepository.php` and `includes/Install.php`; nothing else in the plugin
   contains a query.
@@ -156,7 +157,7 @@ Organization (owned by the dependency)
                      ↓
               Pay by invoice gateway ── classic checkout
                      │              └── block checkout (Store API)
-                     └── Order: purchase order number, terms, due date
+                     └── Order: terms and due date, snapshotted
 ```
 
 ### Two questions, asked in this order
@@ -221,8 +222,8 @@ is paid and wants the limit to keep meaning something should leave new invoice o
 
 ### The terms on an order are a snapshot
 
-`Checkout\OrderMeta` writes `_woip_purchase_order`, `_woip_payment_terms_days` and `_woip_due_date`
-when the order is placed, and nothing recomputes them afterwards. Shortening a customer's terms next
+`Checkout\OrderMeta` writes `_woip_payment_terms_days` and `_woip_due_date` when the order is
+placed, and nothing recomputes them afterwards. Shortening a customer's terms next
 month must not retrospectively make last month's invoice overdue — an order is a financial record of
 an agreement that was in force when it was made.
 
@@ -247,9 +248,9 @@ to it and copies the block's payment data into `$_POST` on the way.
 - **The block script is plain JavaScript against the globals WooCommerce already enqueues** — no JSX,
   no bundler — so the plugin still builds with nothing but Composer and CI's `node --check assets/js`
   is a real test of the file that ships.
-- **`BlocksTest` asserts the two halves cannot drift apart**: the same method name, the same field
-  name, and the same availability answer as the classic gateway. The name is a string in a
-  JavaScript file, and nothing but a test connects it to the constant the server uses.
+- **`BlocksTest` asserts the two halves cannot drift apart**: the same method name and the same
+  availability answer as the classic gateway. The name is a string in a JavaScript file, and
+  nothing but a test connects it to the constant the server uses.
 - **`declare_compatibility( 'cart_checkout_blocks' )` is not a nicety here.** A gateway that has not
   declared it is hidden from the block checkout entirely.
 

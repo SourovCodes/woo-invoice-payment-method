@@ -287,7 +287,6 @@ class I18nTest extends WP_UnitTestCase {
 					$this->assertSame( 'Kauf auf Rechnung', __( 'Pay by invoice', 'woo-invoice-payment-method' ), $locale );
 					$this->assertSame( 'Zahlungsziel', __( 'Payment terms', 'woo-invoice-payment-method' ), $locale );
 					$this->assertSame( 'Kreditlimit', __( 'Credit limit', 'woo-invoice-payment-method' ), $locale );
-					$this->assertSame( 'Bestellreferenz', __( 'Purchase order number', 'woo-invoice-payment-method' ), $locale );
 					$this->assertSame( 'Rechnung fällig', __( 'Invoice due', 'woo-invoice-payment-method' ), $locale );
 					$this->assertSame(
 						'Zahlbar sofort nach Erhalt.',
